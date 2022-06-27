@@ -4124,7 +4124,7 @@
       B.DivElement_methods.setInnerHtml$1(optionElement, J.$add$ansx(optionElement.innerHTML, optionEnd));
       t1 = optionElement.innerHTML;
       A._asStringS(option);
-      B.DivElement_methods.setInnerHtml$1(optionElement, J.$add$ansx(t1, "<input type='hidden' value='" + option + "'>"));
+      B.DivElement_methods.setInnerHtml$1(optionElement, J.$add$ansx(t1, '<input type="hidden" value="' + option + '">'));
       t1 = type$._ElementEventStreamImpl_legacy_MouseEvent;
       t2 = t1._eval$1("~(1)?")._as(new A.createOptionElement_closure(inputElement, option));
       type$.nullable_void_Function._as(null);
@@ -6773,8 +6773,12 @@
       return this._this.childNodes.length;
     },
     $index(_, index) {
+      var t1;
       A._asIntS(index);
-      return B.NodeList_methods.$index(this._this.childNodes, index);
+      t1 = this._this.childNodes;
+      if (!(index >= 0 && index < t1.length))
+        return A.ioore(t1, index);
+      return t1[index];
     }
   };
   A.Node.prototype = {
@@ -7484,18 +7488,20 @@
           return A.iae(t4);
         if (!(i < t4))
           break;
-        option = t3.$index(t2, i);
-        t4 = J.getInterceptor$asx(option);
-        optionLength = t4.get$length(option);
-        if (typeof optionLength !== "number")
-          return optionLength.$ge();
-        if (optionLength >= valueLength) {
+        c$0: {
+          option = t3.$index(t2, i);
+          t4 = J.getInterceptor$asx(option);
+          optionLength = t4.get$length(option);
+          if (typeof optionLength !== "number")
+            return optionLength.$lt();
+          if (optionLength < valueLength)
+            break c$0;
           optionStart = t4.substring$2(option, 0, valueLength);
-          if (optionStart.toUpperCase() === value.toUpperCase()) {
-            if (optionLength !== valueLength)
-              ++unequalFound;
-            A.createOptionElement(t1, elementList, option, optionStart, t4.substring$2(option, valueLength, t4.get$length(option)));
-          }
+          if (optionStart.toUpperCase() !== value.toUpperCase())
+            break c$0;
+          if (optionLength !== valueLength)
+            ++unequalFound;
+          A.createOptionElement(t1, elementList, option, optionStart, t4.substring$2(option, valueLength, t4.get$length(option)));
         }
         ++i;
       }
@@ -7506,44 +7512,45 @@
   };
   A.autocomplete_closure0.prototype = {
     call$1($event) {
-      var currentChoiceId, t3, view,
-        t1 = document,
-        list = t1.querySelector("#autocomplete-list"),
-        t2 = J.getInterceptor$x($event);
-      if (t2.get$keyCode($event) === 40) {
-        t1 = this._box_0;
-        t1.currentChoiceId = J.$add$ansx(t1.currentChoiceId, 1);
+      var view,
+        t1 = this._box_0,
+        currentChoiceId = t1.currentChoiceId,
+        t2 = document,
+        list = t2.querySelector("#autocomplete-list"),
+        t3 = J.getInterceptor$x($event);
+      if (t3.get$keyCode($event) === 40) {
+        currentChoiceId = J.$add$ansx(currentChoiceId, 1);
         if (A.boolConversionCheck(list.hasChildNodes()))
-          t1.currentChoiceId = A.addActive(new A._ChildNodeListLazy(list), t1.currentChoiceId);
-      } else if (t2.get$keyCode($event) === 38) {
-        t1 = this._box_0;
-        t2 = t1.currentChoiceId;
-        if (typeof t2 !== "number")
-          return t2.$sub();
-        t1.currentChoiceId = t2 - 1;
+          currentChoiceId = A.addActive(new A._ChildNodeListLazy(list), currentChoiceId);
+      } else if (t3.get$keyCode($event) === 38) {
+        if (typeof currentChoiceId !== "number")
+          return currentChoiceId.$sub();
+        --currentChoiceId;
         if (A.boolConversionCheck(list.hasChildNodes())) {
-          currentChoiceId = t1.currentChoiceId = new A._ChildNodeListLazy(list);
+          currentChoiceId = new A._ChildNodeListLazy(list);
           A.addActive(currentChoiceId, currentChoiceId);
         }
-      } else if (t2.get$keyCode($event) === 13) {
+      } else if (t3.get$keyCode($event) === 13) {
         $event.preventDefault();
-        t2 = this._box_0;
-        t3 = t2.currentChoiceId;
-        if (typeof t3 !== "number")
-          return t3.$gt();
-        if (t3 > -1) {
+        if (typeof currentChoiceId !== "number")
+          return currentChoiceId.$gt();
+        if (currentChoiceId > -1) {
           if (A.boolConversionCheck(list.hasChildNodes())) {
-            t2 = A._asIntS(t2.currentChoiceId);
-            t2 = B.NodeList_methods.$index(list.childNodes, t2);
+            A._asIntS(currentChoiceId);
+            t3 = list.childNodes;
+            if (!(currentChoiceId >= 0 && currentChoiceId < t3.length))
+              return A.ioore(t3, currentChoiceId);
+            t3 = t3[currentChoiceId];
             view = window;
-            $event = type$.MouseEvent._as(t1.createEvent("MouseEvent"));
+            $event = type$.MouseEvent._as(t2.createEvent("MouseEvent"));
             $event.toString;
-            J._initMouseEvent_1$15$x($event, "click", true, true, view, 0, 0, 0, 0, 0, false, false, false, false, 0, A._convertDartToNative_EventTarget(t2));
-            t2.dispatchEvent($event);
+            J._initMouseEvent_1$15$x($event, "click", true, true, view, 0, 0, 0, 0, 0, false, false, false, false, 0, A._convertDartToNative_EventTarget(t3));
+            t3.dispatchEvent($event);
           }
         } else
           A.loadCurrentPokemon();
       }
+      t1.currentChoiceId = currentChoiceId;
     },
     $signature: 1
   };
@@ -7773,7 +7780,6 @@
     B.JSString_methods = J.JSString.prototype;
     B.JavaScriptFunction_methods = J.JavaScriptFunction.prototype;
     B.JavaScriptObject_methods = J.JavaScriptObject.prototype;
-    B.NodeList_methods = A.NodeList.prototype;
     B.PlainJavaScriptObject_methods = J.PlainJavaScriptObject.prototype;
     B.TableElement_methods = A.TableElement.prototype;
     B.UnknownJavaScriptObject_methods = J.UnknownJavaScriptObject.prototype;

@@ -64,9 +64,7 @@ autocomplete(input, options) {
 
     var value = input.value;
     if (!shouldShowOptions(value)) return false;
-
     currentChoiceId = -1;
-
     Element elementList = createElementList(input);
 
     // amount of letters typed on input element
@@ -74,45 +72,25 @@ autocomplete(input, options) {
     var unequalFound = 0;
     for (var i = 0; i < options.length; i++) {
       var option = options[i];
+
       // amount of letters on current option
       var optionLength = option.length;
-      if (optionLength >= valueLength) {
-        // start of current option, containing same amount of letters as currently typed on input element
-        var optionStart = option.substring(0, valueLength);
-        if (optionStart.toUpperCase() == value.toUpperCase()) {
-          if (optionLength != valueLength) unequalFound++;
-          var optionEnd = option.substring(valueLength, option.length);
-          createOptionElement(
-              input, elementList, option, optionStart, optionEnd);
-        }
-      }
+      if (optionLength < valueLength) continue;
+
+      // start of current option, containing same amount of letters as currently typed on input element
+      var optionStart = option.substring(0, valueLength);
+      if (optionStart.toUpperCase() != value.toUpperCase()) continue;
+
+      if (optionLength != valueLength) unequalFound++;
+      var optionEnd = option.substring(valueLength, option.length);
+      createOptionElement(input, elementList, option, optionStart, optionEnd);
     }
 
     if (unequalFound == 0) closeAllLists();
   });
 
   input.onKeyDown.listen((event) {
-    var list = querySelector('#autocomplete-list');
-
-    if (event.keyCode == 40) {
-      currentChoiceId++;
-      if (list.hasChildNodes()) {
-        currentChoiceId = addActive(list.nodes, currentChoiceId);
-      }
-    } else if (event.keyCode == 38) {
-      currentChoiceId--;
-      if (list.hasChildNodes()) {
-        addActive(currentChoiceId = list.nodes, currentChoiceId);
-      }
-    } else if (event.keyCode == 13) {
-      event.preventDefault();
-      if (currentChoiceId > -1) {
-        if (list.hasChildNodes()) {
-          runClick(list.nodes[currentChoiceId]);
-        }
-      } else
-        loadCurrentPokemon();
-    }
+    currentChoiceId = onInputKey(event, currentChoiceId);
   });
 
   document.onClick.listen((e) {
@@ -123,7 +101,7 @@ autocomplete(input, options) {
 shouldShowOptions(text) {
   if (text == '') return false;
   var first = text.codeUnitAt(0);
-  if (first == '0' ||
+  return !(first == '0' ||
       first == '1' ||
       first == '2' ||
       first == '3' ||
@@ -132,8 +110,7 @@ shouldShowOptions(text) {
       first == '6' ||
       first == '7' ||
       first == '8' ||
-      first == '9') return false;
-  return true;
+      first == '9');
 }
 
 addActive(elements, currentChoiceId) {
@@ -185,6 +162,39 @@ createOptionElement(inputElement, elementList, option, optionStart, optionEnd) {
     loadCurrentPokemon();
   });
   elementList.nodes.add(optionElement);
+}
+
+onInputKey(event, currentChoiceId) {
+  var list = querySelector('#autocomplete-list');
+
+  if (event.keyCode == 40) {
+    // arrow down
+    currentChoiceId++;
+    if (list.hasChildNodes()) {
+      currentChoiceId = addActive(list.nodes, currentChoiceId);
+    }
+  } else if (event.keyCode == 38) {
+    // arrow up
+    currentChoiceId--;
+    if (list.hasChildNodes()) {
+      addActive(currentChoiceId = list.nodes, currentChoiceId);
+    }
+  } else if (event.keyCode == 13) {
+    // enter
+    onInputEnter(event, list, currentChoiceId);
+  }
+
+  return currentChoiceId;
+}
+
+onInputEnter(event, list, currentChoiceId) {
+  event.preventDefault();
+  if (currentChoiceId > -1) {
+    if (list.hasChildNodes()) {
+      runClick(list.nodes[currentChoiceId]);
+    }
+  } else
+    loadCurrentPokemon();
 }
 
 runClick(target) {
