@@ -21,6 +21,7 @@ body {
     left: 0;
     right: 0;
 }
+
 .autocomplete-items div {
     padding: 10px;
     cursor: pointer;
@@ -35,6 +36,15 @@ body {
 .autocomplete-active {
     background-color: DodgerBlue !important;
     color: #ffffff;
+}
+
+#search-field {
+    font-size: 1.25em;
+    width: 300px;
+}
+
+#search-button {
+    font-size: 1.25em;
 }
 
 #stats {

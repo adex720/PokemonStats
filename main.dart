@@ -421,5 +421,3 @@ setStats(stats) {
   querySelector('#stamina-value').text = stamina.toString();
   querySelector('#cp-value').text = cp.toString();
 }
-
-//TODO: use pokemon color for name background

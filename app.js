@@ -3443,9 +3443,6 @@
     FormatException$(message, source) {
       return new A.FormatException(message, source);
     },
-    print(object) {
-      A.printString(A.S(object));
-    },
     Error: function Error() {
     },
     AssertionError: function AssertionError(t0) {
@@ -3842,16 +3839,11 @@
     SvgElement: function SvgElement() {
     },
     main() {
-      var _s14_ = "#search-button",
-        t1 = document,
-        t2 = J.get$onClick$x(t1.querySelector(_s14_)),
-        t3 = t2.$ti,
-        t4 = t3._eval$1("~(1)?")._as(new A.main_closure());
+      var t1 = J.get$onClick$x(document.querySelector("#search-button")),
+        t2 = t1.$ti,
+        t3 = t2._eval$1("~(1)?")._as(new A.main_closure());
       type$.nullable_void_Function._as(null);
-      A._EventStreamSubscription$(t2._target, t2._eventType, t4, false, t3._precomputed1);
-      t1 = J.get$onKeyPress$x(t1.querySelector(_s14_));
-      t3 = t1.$ti;
-      A._EventStreamSubscription$(t1._target, t1._eventType, t3._eval$1("~(1)?")._as(new A.main_closure0()), false, t3._precomputed1);
+      A._EventStreamSubscription$(t1._target, t1._eventType, t3, false, t2._precomputed1);
       A.loadData();
     },
     loadData() {
@@ -4145,7 +4137,6 @@
         return false;
       if (A.isNumber(J._codeUnitAt$1$s(pokemon, 0)))
         try {
-          A.print("parsing");
           i = A.int_parse(pokemon, null);
           t1 = i;
           t2 = A._asNumS(J.get$length$asx($.names));
@@ -4162,15 +4153,9 @@
             t1 = false;
           return t1;
         } catch (exception) {
-          A.print("parse failed");
-          A.print(pokemon);
-          A.print(pokemon.toLowerCase());
           t1 = J.contains$1$asx($.names, pokemon.toLowerCase());
           return t1;
         }
-      A.print("not a number");
-      A.print(pokemon);
-      A.print(pokemon.toLowerCase());
       return J.contains$1$asx($.names, pokemon.toLowerCase());
     },
     autocomplete(input, options) {
@@ -4192,7 +4177,6 @@
       return !A.isNumber(J._codeUnitAt$1$s(text, 0));
     },
     isNumber(letterId) {
-      A.print(letterId);
       return letterId >= 48 && letterId <= 57;
     },
     addActive(elements, currentChoiceId) {
@@ -4401,8 +4385,6 @@
     },
     main_closure: function main_closure() {
     },
-    main_closure0: function main_closure0() {
-    },
     autocomplete_closure: function autocomplete_closure(t0, t1, t2) {
       this._box_0 = t0;
       this.input = t1;
@@ -4417,23 +4399,6 @@
     createOptionElement_closure: function createOptionElement_closure(t0, t1) {
       this.inputElement = t0;
       this.option = t1;
-    },
-    printString(string) {
-      if (typeof dartPrint == "function") {
-        dartPrint(string);
-        return;
-      }
-      if (typeof console == "object" && typeof console.log != "undefined") {
-        console.log(string);
-        return;
-      }
-      if (typeof window == "object")
-        return;
-      if (typeof print == "function") {
-        print(string);
-        return;
-      }
-      throw "Unable to print message: " + String(string);
     },
     throwLateFieldADI(fieldName) {
       return A.throwExpression(new A.LateError("Field '" + A.S(fieldName) + "' has been assigned during initialization."));
@@ -4701,9 +4666,6 @@
     },
     get$onClick$x(receiver) {
       return J.getInterceptor$x(receiver).get$onClick(receiver);
-    },
-    get$onKeyPress$x(receiver) {
-      return J.getInterceptor$x(receiver).get$onKeyPress(receiver);
     },
     $add$ansx(receiver, a0) {
       if (typeof receiver == "number" && typeof a0 == "number")
@@ -6960,9 +6922,6 @@
     get$onClick(receiver) {
       return new A._ElementEventStreamImpl(receiver, "click", false, type$._ElementEventStreamImpl_legacy_MouseEvent);
     },
-    get$onKeyPress(receiver) {
-      return new A._ElementEventStreamImpl(receiver, "keypress", false, type$._ElementEventStreamImpl_legacy_KeyboardEvent);
-    },
     $isElement: 1
   };
   A.Element_Element$html_closure.prototype = {
@@ -7805,9 +7764,6 @@
     get$onClick(receiver) {
       return new A._ElementEventStreamImpl(receiver, "click", false, type$._ElementEventStreamImpl_legacy_MouseEvent);
     },
-    get$onKeyPress(receiver) {
-      return new A._ElementEventStreamImpl(receiver, "keypress", false, type$._ElementEventStreamImpl_legacy_KeyboardEvent);
-    },
     $isSvgElement: 1
   };
   A.main_closure.prototype = {
@@ -7832,12 +7788,6 @@
       return A._asyncStartSync($async$call$1, $async$completer);
     },
     $signature: 30
-  };
-  A.main_closure0.prototype = {
-    call$1($event) {
-      A.print(type$.legacy_KeyboardEvent._as($event).keyCode);
-    },
-    $signature: 31
   };
   A.autocomplete_closure.prototype = {
     call$1($event) {
@@ -7883,7 +7833,7 @@
       if (unequalFound === 0)
         A.closeAllLists();
     },
-    $signature: 32
+    $signature: 31
   };
   A.autocomplete_closure0.prototype = {
     call$1($event) {
@@ -7976,7 +7926,7 @@
     _inherit(J.JSUnmodifiableArray, J.JSArray);
     _inheritMany(J.JSNumber, [J.JSInt, J.JSNumNotInt]);
     _inheritMany(A.Error, [A.LateError, A.ReachabilityError, A.NotNullableError, A.TypeError, A.JsNoSuchMethodError, A.UnknownJsTypeError, A.RuntimeError, A.AssertionError, A._Error, A.NullThrownError, A.ArgumentError, A.UnsupportedError, A.UnimplementedError, A.StateError, A.ConcurrentModificationError, A.CyclicInitializationError]);
-    _inheritMany(A.Closure, [A.Closure0Args, A.Closure2Args, A.TearOffClosure, A.initHooks_closure, A.initHooks_closure1, A._AsyncRun__initializeScheduleImmediate_internalCallback, A._AsyncRun__initializeScheduleImmediate_closure, A._awaitOnObject_closure, A._Future__chainForeignFuture_closure, A._Future__propagateToListeners_handleWhenCompleteCallback_closure, A.Stream_contains_closure0, A.Stream_contains__closure0, A.Stream_length_closure, A._RootZone_bindUnaryCallbackGuarded_closure, A.Element_Element$html_closure, A.HttpRequest_getString_closure, A.HttpRequest_request_closure, A._EventStreamSubscription_closure, A._EventStreamSubscription_onData_closure, A.NodeValidatorBuilder_allowsElement_closure, A.NodeValidatorBuilder_allowsAttribute_closure, A._SimpleNodeValidator_closure, A._SimpleNodeValidator_closure0, A._TemplatingNodeValidator_closure, A.CssClassSetImpl_add_closure, A.main_closure, A.main_closure0, A.autocomplete_closure, A.autocomplete_closure0, A.autocomplete_closure1, A.createOptionElement_closure]);
+    _inheritMany(A.Closure, [A.Closure0Args, A.Closure2Args, A.TearOffClosure, A.initHooks_closure, A.initHooks_closure1, A._AsyncRun__initializeScheduleImmediate_internalCallback, A._AsyncRun__initializeScheduleImmediate_closure, A._awaitOnObject_closure, A._Future__chainForeignFuture_closure, A._Future__propagateToListeners_handleWhenCompleteCallback_closure, A.Stream_contains_closure0, A.Stream_contains__closure0, A.Stream_length_closure, A._RootZone_bindUnaryCallbackGuarded_closure, A.Element_Element$html_closure, A.HttpRequest_getString_closure, A.HttpRequest_request_closure, A._EventStreamSubscription_closure, A._EventStreamSubscription_onData_closure, A.NodeValidatorBuilder_allowsElement_closure, A.NodeValidatorBuilder_allowsAttribute_closure, A._SimpleNodeValidator_closure, A._SimpleNodeValidator_closure0, A._TemplatingNodeValidator_closure, A.CssClassSetImpl_add_closure, A.main_closure, A.autocomplete_closure, A.autocomplete_closure0, A.autocomplete_closure1, A.createOptionElement_closure]);
     _inheritMany(A.Closure0Args, [A.nullFuture_closure, A._AsyncRun__scheduleImmediateJsOverride_internalCallback, A._AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, A._TimerImpl_internalCallback, A._Future__addListener_closure, A._Future__prependListeners_closure, A._Future__chainForeignFuture_closure1, A._Future__asyncCompleteWithValue_closure, A._Future__chainFuture_closure, A._Future__asyncCompleteError_closure, A._Future__propagateToListeners_handleWhenCompleteCallback, A._Future__propagateToListeners_handleValueCallback, A._Future__propagateToListeners_handleError, A.Stream_contains_closure, A.Stream_contains__closure, A.Stream_length_closure0, A._cancelAndError_closure, A._cancelAndValue_closure, A._rootHandleError_closure, A._RootZone_bindCallbackGuarded_closure]);
     _inheritMany(A.Iterable, [A.EfficientLengthIterable, A.WhereIterable]);
     _inheritMany(A.EfficientLengthIterable, [A.ListIterable, A.LinkedHashMapKeyIterable]);
@@ -8038,7 +7988,7 @@
     typeUniverse: {eC: new Map(), tR: {}, eT: {}, tPV: {}, sEA: []},
     mangledGlobalNames: {int: "int", double: "double", num: "num", String: "String", bool: "bool", Null: "Null", List: "List"},
     mangledNames: {},
-    types: ["~()", "Null(@)", "~(~())", "Null()", "~(Object,StackTrace)", "~(Event)", "bool(NodeValidator)", "bool(String)", "Null(MouseEvent*)", "bool(Element,String,String,_Html5NodeValidator)", "Future<Null>()", "@(@)", "@(@,String)", "@(String)", "Null(~())", "~(@)", "Null(@,StackTrace)", "~(int,@)", "~(Object[StackTrace?])", "Null(Object,StackTrace)", "_Future<@>(@)", "bool()", "Null(bool)", "~(Object?,Object?)", "bool(Node)", "String(HttpRequest)", "~(ProgressEvent)", "String(String)", "~(Node,Node?)", "bool(Set<String>)", "Future<Null>*(MouseEvent*)", "Null(KeyboardEvent*)", "bool*(@)"],
+    types: ["~()", "Null(@)", "~(~())", "Null()", "~(Object,StackTrace)", "~(Event)", "bool(NodeValidator)", "bool(String)", "Null(MouseEvent*)", "bool(Element,String,String,_Html5NodeValidator)", "Future<Null>()", "@(@)", "@(@,String)", "@(String)", "Null(~())", "~(@)", "Null(@,StackTrace)", "~(int,@)", "~(Object[StackTrace?])", "Null(Object,StackTrace)", "_Future<@>(@)", "bool()", "Null(bool)", "~(Object?,Object?)", "bool(Node)", "String(HttpRequest)", "~(ProgressEvent)", "String(String)", "~(Node,Node?)", "bool(Set<String>)", "Future<Null>*(MouseEvent*)", "bool*(@)"],
     interceptorsByTag: null,
     leafTags: null,
     arrayRti: Symbol("$ti")
@@ -8111,7 +8061,6 @@
       int: findType("int"),
       legacy_Element: findType("Element*"),
       legacy_InputElement: findType("InputElement*"),
-      legacy_KeyboardEvent: findType("KeyboardEvent*"),
       legacy_MouseEvent: findType("MouseEvent*"),
       legacy_Never: findType("0&*"),
       legacy_Object: findType("Object*"),
