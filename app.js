@@ -3849,7 +3849,7 @@
     loadPokemon(pokemon) {
       var $async$goto = 0,
         $async$completer = A._makeAsyncAwaitCompleter(type$.dynamic),
-        $async$returnValue, t2, otherLetters, speedMod, physical, special, lower, higher, attack, defence, stamina, defenceSqrt, staminaSqrt, cp, json, t1, $name, stats, typesJson;
+        $async$returnValue, otherLetters, speedMod, physical, special, lower, higher, attack, defence, stamina, defenceSqrt, staminaSqrt, cp, json, t1, t2, id, stats, typesJson;
       var $async$loadPokemon = A._wrapJsFunctionForAsync(function($async$errorCode, $async$result) {
         if ($async$errorCode === 1)
           return A._asyncRethrow($async$result, $async$completer);
@@ -3863,14 +3863,19 @@
               // returning from await.
               json = $async$result;
               t1 = J.getInterceptor$asx(json);
-              $name = J.$index$asx(J.$index$asx(t1.$index(json, "forms"), 0), "name");
+              t2 = A._asStringS(J.$index$asx(J.$index$asx(t1.$index(json, "forms"), 0), "name"));
+              $async$goto = 4;
+              return A._asyncAwait(A.getPokedexNumber(json, t2), $async$loadPokemon);
+            case 4:
+              // returning from await.
+              id = $async$result;
               stats = A.getStatValues(t1.$index(json, "stats"));
               typesJson = t1.$index(json, "types");
-              t1 = J.getInterceptor$s($name);
-              t2 = t1.substring$2($name, 0, 1);
-              otherLetters = t1.substring$2($name, 1, t1.get$length($name));
-              t1 = document;
-              J.set$text$x(t1.querySelector("#name"), t2.toUpperCase() + otherLetters);
+              t1 = J.substring$2$s(t2, 0, 1);
+              otherLetters = B.JSString_methods.substring$2(t2, 1, t2.length);
+              t2 = document;
+              J.set$text$x(t2.querySelector("#name"), t1.toUpperCase() + otherLetters);
+              J.set$text$x(t2.querySelector("#number"), J.toString$0$(id));
               if (5 >= stats.length) {
                 $async$returnValue = A.ioore(stats, 5);
                 // goto return
@@ -3878,15 +3883,15 @@
                 break;
               }
               speedMod = 1 + A._asNumS(J.$mul$ns(J.$sub$n(stats[5], 75), 0.002));
-              t2 = stats.length;
-              if (1 >= t2) {
+              t1 = stats.length;
+              if (1 >= t1) {
                 $async$returnValue = A.ioore(stats, 1);
                 // goto return
                 $async$goto = 1;
                 break;
               }
               physical = stats[1];
-              if (3 >= t2) {
+              if (3 >= t1) {
                 $async$returnValue = A.ioore(stats, 3);
                 // goto return
                 $async$goto = 1;
@@ -3915,15 +3920,15 @@
                 break;
               }
               attack = B.JSNumber_methods.round$0(B.JSNumber_methods.round$0(2 * (0.125 * lower + 0.875 * higher)) * speedMod);
-              t2 = stats.length;
-              if (2 >= t2) {
+              t1 = stats.length;
+              if (2 >= t1) {
                 $async$returnValue = A.ioore(stats, 2);
                 // goto return
                 $async$goto = 1;
                 break;
               }
               physical = stats[2];
-              if (4 >= t2) {
+              if (4 >= t1) {
                 $async$returnValue = A.ioore(stats, 4);
                 // goto return
                 $async$goto = 1;
@@ -3958,39 +3963,39 @@
                 $async$goto = 1;
                 break;
               }
-              t2 = A._asNumS(stats[0]);
-              if (typeof t2 !== "number") {
-                $async$returnValue = A.iae(t2);
+              t1 = A._asNumS(stats[0]);
+              if (typeof t1 !== "number") {
+                $async$returnValue = A.iae(t1);
                 // goto return
                 $async$goto = 1;
                 break;
               }
-              stamina = B.JSNumber_methods.floor$0(1.75 * t2) + 50;
+              stamina = B.JSNumber_methods.floor$0(1.75 * t1) + 50;
               defenceSqrt = Math.sqrt(defence + 15);
               staminaSqrt = Math.sqrt(stamina + 15);
-              t2 = $.$get$cpmSquared();
-              if (typeof t2 !== "number") {
-                $async$returnValue = A.iae(t2);
+              t1 = $.$get$cpmSquared();
+              if (typeof t1 !== "number") {
+                $async$returnValue = A.iae(t1);
                 // goto return
                 $async$goto = 1;
                 break;
               }
-              cp = B.JSNumber_methods.floor$0((attack + 15) * defenceSqrt * staminaSqrt * t2 * 0.1);
-              J.set$text$x(t1.querySelector("#attack-value"), B.JSInt_methods.toString$0(attack));
-              J.set$text$x(t1.querySelector("#defence-value"), B.JSInt_methods.toString$0(defence));
-              J.set$text$x(t1.querySelector("#stamina-value"), B.JSInt_methods.toString$0(stamina));
-              J.set$text$x(t1.querySelector("#cp-value"), B.JSInt_methods.toString$0(cp));
-              t1 = J.getInterceptor$asx(typesJson);
-              A.switchType(J.$index$asx(J.$index$asx(t1.$index(typesJson, 0), "type"), "name"), 1);
-              t2 = t1.get$length(typesJson);
-              if (typeof t2 !== "number") {
-                $async$returnValue = t2.$gt();
+              cp = B.JSNumber_methods.floor$0((attack + 15) * defenceSqrt * staminaSqrt * t1 * 0.1);
+              J.set$text$x(t2.querySelector("#attack-value"), B.JSInt_methods.toString$0(attack));
+              J.set$text$x(t2.querySelector("#defence-value"), B.JSInt_methods.toString$0(defence));
+              J.set$text$x(t2.querySelector("#stamina-value"), B.JSInt_methods.toString$0(stamina));
+              J.set$text$x(t2.querySelector("#cp-value"), B.JSInt_methods.toString$0(cp));
+              t2 = J.getInterceptor$asx(typesJson);
+              A.switchType(J.$index$asx(J.$index$asx(t2.$index(typesJson, 0), "type"), "name"), 1);
+              t1 = t2.get$length(typesJson);
+              if (typeof t1 !== "number") {
+                $async$returnValue = t1.$gt();
                 // goto return
                 $async$goto = 1;
                 break;
               }
-              if (t2 > 1)
-                A.switchType(J.$index$asx(J.$index$asx(t1.$index(typesJson, 1), "type"), "name"), 2);
+              if (t1 > 1)
+                A.switchType(J.$index$asx(J.$index$asx(t2.$index(typesJson, 1), "type"), "name"), 2);
               else
                 A.switchType(null, 2);
             case 1:
@@ -4194,6 +4199,49 @@
       for (t1 = J.getInterceptor$asx(json), i = 0; i < 6; ++i)
         B.JSArray_methods.$indexSet(stats, i, J.$index$asx(t1.$index(json, i), "base_stat"));
       return stats;
+    },
+    getPokedexNumber(json, $name) {
+      var $async$goto = 0,
+        $async$completer = A._makeAsyncAwaitCompleter(type$.dynamic),
+        $async$returnValue, t1, id, $async$temp1, $async$temp2, $async$temp3;
+      var $async$getPokedexNumber = A._wrapJsFunctionForAsync(function($async$errorCode, $async$result) {
+        if ($async$errorCode === 1)
+          return A._asyncRethrow($async$result, $async$completer);
+        while (true)
+          switch ($async$goto) {
+            case 0:
+              // Function start
+              id = J.$index$asx(json, "id");
+              if (J.$lt$n(id, 1000)) {
+                $async$returnValue = id;
+                // goto return
+                $async$goto = 1;
+                break;
+              }
+              t1 = $name.split("-");
+              if (0 >= t1.length) {
+                $async$returnValue = A.ioore(t1, 0);
+                // goto return
+                $async$goto = 1;
+                break;
+              }
+              $async$temp1 = J;
+              $async$temp2 = J;
+              $async$temp3 = J;
+              $async$goto = 3;
+              return A._asyncAwait(A.requestJson(B.JSString_methods.$add("https://pokeapi.co/api/v2/pokemon/", t1[0])), $async$getPokedexNumber);
+            case 3:
+              // returning from await.
+              $async$returnValue = $async$temp1.$index$asx($async$temp2.$index$asx($async$temp3.$index$asx($async$result, "forms"), 0), "name");
+              // goto return
+              $async$goto = 1;
+              break;
+            case 1:
+              // return
+              return A._asyncReturn($async$returnValue, $async$completer);
+          }
+      });
+      return A._asyncStartSync($async$getPokedexNumber, $async$completer);
     },
     switchType(type, typeId) {
       var backgroundColor,
@@ -4542,6 +4590,11 @@
             return receiver[a0];
       return J.getInterceptor$asx(receiver).$index(receiver, a0);
     },
+    $lt$n(receiver, a0) {
+      if (typeof receiver == "number" && typeof a0 == "number")
+        return receiver < a0;
+      return J.getInterceptor$n(receiver).$lt(receiver, a0);
+    },
     $mul$ns(receiver, a0) {
       if (typeof receiver == "number" && typeof a0 == "number")
         return receiver * a0;
@@ -4859,6 +4912,11 @@
     },
     _shrBothPositive$1(receiver, other) {
       return other > 31 ? 0 : receiver >>> other;
+    },
+    $lt(receiver, other) {
+      if (typeof other != "number")
+        throw A.wrapException(A.argumentErrorValue(other));
+      return receiver < other;
     },
     $ge(receiver, other) {
       A._asNumS(other);

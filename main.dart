@@ -31,11 +31,13 @@ loadPokemon(pokemon) async {
   var json = await requestJson(url);
 
   var name = json['forms'][0]['name'];
+  var id = await getPokedexNumber(json, name);
   var statsJson = json['stats'];
   var stats = getStatValues(statsJson);
   var typesJson = json['types'];
 
   switchName(name);
+  switchId(id);
   setStats(stats);
   updateTypes(typesJson);
 }
@@ -298,11 +300,30 @@ getCp(attack, defence, stamina) {
   return (statSum * 0.1).floor();
 }
 
+getPokedexNumber(json, String name) async {
+  var id = json['id'];
+  if (id < 1000) return id;
+
+  var nameWithoutForm = name.split('-')[0];
+  var url = 'https://pokeapi.co/api/v2/pokemon/' + nameWithoutForm;
+  json = await requestJson(url);
+  return json['forms'][0]['name'];
+}
+
 switchName(name) {
   var firstLetter = name.substring(0, 1).toUpperCase();
   var otherLetters = name.substring(1, name.length);
   var formattedName = firstLetter + otherLetters;
   querySelector('#name').text = formattedName;
+}
+
+switchId(id){
+  querySelector('#number').text = id.toString();
+}
+
+updatePokemonColor(color){
+  querySelector('#name').style.backgroundColor = color;
+  querySelector('#number').style.backgroundColor = color;
 }
 
 updateTypes(typesJson) {
@@ -387,6 +408,5 @@ setStats(stats) {
   querySelector('#cp-value').text = cp.toString();
 }
 
-//TODO: display pokedex number
 //TODO: check for valid pokemon name or number
 //TODO: use pokemon color for name background
