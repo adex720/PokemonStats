@@ -16,6 +16,7 @@ main() {
 }
 
 loadData() async {
+  loadColors();
   registerPokemonNames();
   loadPokemon('1');
 }
@@ -32,9 +33,11 @@ loadPokemon(pokemon) async {
   var name = json['forms'][0]['name'];
   var statsJson = json['stats'];
   var stats = getStatValues(statsJson);
+  var typesJson = json['types'];
 
   switchName(name);
   setStats(stats);
+  updateTypes(typesJson);
 }
 
 requestJson(url) async {
@@ -270,6 +273,75 @@ switchName(name) {
   querySelector('#name').text = formattedName;
 }
 
+updateTypes(typesJson) {
+  var type1 = typesJson[0]['type']['name'];
+  switchType(type1, 1);
+  if (typesJson.length > 1) {
+    var type2 = typesJson[1]['type']['name'];
+    switchType(type2, 2);
+  } else {
+    switchType(null, 2);
+  }
+}
+
+switchType(type, typeId) {
+  var elementName = '#type' + typeId.toString();
+  if (type == null) {
+    updateTypeElement(elementName, '', '#FFFFFF', '#FFFFFF');
+    return;
+  }
+
+  var backgroundColor = getTypeColor(type);
+  var textColor = getTypeTextColor(backgroundColor);
+  updateTypeElement(elementName, type, textColor, backgroundColor);
+}
+
+updateTypeElement(elementName, type, textColor, backgroundColor) {
+  var element = querySelector(elementName);
+  element.text = type;
+  element.style.backgroundColor = backgroundColor;
+  element.style.color = textColor;
+}
+
+var colors;
+
+loadColors() {
+  colors = new Map();
+  colors['normal'] = '#A8A77A';
+  colors['fire'] = '#EE8130';
+  colors['water'] = '#6390F0';
+  colors['electric'] = '#F7D02C';
+  colors['grass'] = '#7AC74C';
+  colors['ice'] = '#96D9D6';
+  colors['fighting'] = '#C22E28';
+  colors['poison'] = '#A33EA1';
+  colors['ground'] = '#E2BF65';
+  colors['flying'] = '#A98FF3';
+  colors['psychic'] = '#F95587';
+  colors['bug'] = '#A6B91A';
+  colors['rock'] = '#B6A136';
+  colors['ghost'] = '#735797';
+  colors['dragon'] = '#6F35FC';
+  colors['dark'] = '#705746';
+  colors['steel'] = '#B7B7CE';
+  colors['fairy'] = '#D685AD';
+}
+
+getTypeColor(type) {
+  return colors[type];
+}
+
+getTypeTextColor(backgroundColor) {
+  var i = int.parse(backgroundColor.substring(1, 7), radix: 16);
+  var red = i >> 16;
+  var green = (i >> 8) & 0xFF;
+  var blue = i & 0xFF;
+  var sum = red + green + blue;
+
+  if (sum > 0x17F) return '#000000';
+  return '#FFFFFF';
+}
+
 setStats(stats) {
   var speedMod = getSpeedMod(stats);
   var attack = getAttack(stats, speedMod);
@@ -282,3 +354,8 @@ setStats(stats) {
   querySelector('#stamina-value').text = stamina.toString();
   querySelector('#cp-value').text = cp.toString();
 }
+
+//TODO: display pokedex number
+//TODO: display pokemon type(s)
+//TODO: check for valid pokemon name or number
+//TODO: use pokemon color for name background
