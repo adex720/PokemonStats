@@ -71,19 +71,8 @@ autocomplete(input, options) {
     var valueLength = value.length;
     var unequalFound = 0;
     for (var i = 0; i < options.length; i++) {
-      var option = options[i];
-
-      // amount of letters on current option
-      var optionLength = option.length;
-      if (optionLength < valueLength) continue;
-
-      // start of current option, containing same amount of letters as currently typed on input element
-      var optionStart = option.substring(0, valueLength);
-      if (optionStart.toUpperCase() != value.toUpperCase()) continue;
-
-      if (optionLength != valueLength) unequalFound++;
-      var optionEnd = option.substring(valueLength, option.length);
-      createOptionElement(input, elementList, option, optionStart, optionEnd);
+      if (addOptionIfMatch(options[i], input, value, valueLength, elementList))
+        unequalFound++;
     }
 
     if (unequalFound == 0) closeAllLists();
@@ -149,6 +138,21 @@ createElementList(inputElement) {
   elementList.className = 'autocomplete-items';
   inputElement.parentNode.nodes.add(elementList);
   return elementList;
+}
+
+addOptionIfMatch(option, input, value, valueLength, elementList) {
+  // amount of letters on current option
+  var optionLength = option.length;
+  if (optionLength < valueLength) return false;
+
+  // start of current option, containing same amount of letters as currently typed on input element
+  var optionStart = option.substring(0, valueLength);
+  if (optionStart.toUpperCase() != value.toUpperCase()) return false;
+
+  var optionEnd = option.substring(valueLength, option.length);
+  createOptionElement(input, elementList, option, optionStart, optionEnd);
+
+  return optionLength != valueLength;
 }
 
 createOptionElement(inputElement, elementList, option, optionStart, optionEnd) {

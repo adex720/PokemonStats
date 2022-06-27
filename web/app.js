@@ -4117,6 +4117,20 @@
         }
       }
     },
+    addOptionIfMatch(option, input, value, valueLength, elementList) {
+      var optionStart,
+        t1 = J.getInterceptor$asx(option),
+        optionLength = t1.get$length(option);
+      if (typeof optionLength !== "number")
+        return optionLength.$lt();
+      if (optionLength < valueLength)
+        return false;
+      optionStart = t1.substring$2(option, 0, valueLength);
+      if (optionStart.toUpperCase() !== value.toUpperCase())
+        return false;
+      A.createOptionElement(input, elementList, option, optionStart, t1.substring$2(option, valueLength, t1.get$length(option)));
+      return optionLength !== valueLength;
+    },
     createOptionElement(inputElement, elementList, option, optionStart, optionEnd) {
       var t1, t2,
         optionElement = document.createElement("div");
@@ -7453,7 +7467,7 @@
   };
   A.autocomplete_closure.prototype = {
     call$1($event) {
-      var value, elementList, valueLength, t3, unequalFound, i, t4, option, optionLength, optionStart,
+      var value, elementList, valueLength, t3, unequalFound, i, t4,
         t1 = J.getInterceptor$x($event),
         t2 = t1.get$keyCode($event);
       if (typeof t2 !== "number")
@@ -7488,21 +7502,8 @@
           return A.iae(t4);
         if (!(i < t4))
           break;
-        c$0: {
-          option = t3.$index(t2, i);
-          t4 = J.getInterceptor$asx(option);
-          optionLength = t4.get$length(option);
-          if (typeof optionLength !== "number")
-            return optionLength.$lt();
-          if (optionLength < valueLength)
-            break c$0;
-          optionStart = t4.substring$2(option, 0, valueLength);
-          if (optionStart.toUpperCase() !== value.toUpperCase())
-            break c$0;
-          if (optionLength !== valueLength)
-            ++unequalFound;
-          A.createOptionElement(t1, elementList, option, optionStart, t4.substring$2(option, valueLength, t4.get$length(option)));
-        }
+        if (A.addOptionIfMatch(t3.$index(t2, i), t1, value, valueLength, elementList))
+          ++unequalFound;
         ++i;
       }
       if (unequalFound === 0)
