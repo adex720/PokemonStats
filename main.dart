@@ -8,25 +8,24 @@ main() {
     loadCurrentPokemon();
   });
 
-  querySelector('#search-button').onKeyPress.listen((event) {
-    print(event.keyCode);
-  });
-
   loadData();
 }
 
 loadData() async {
   loadColors();
-  registerPokemonNames();
+  await registerPokemonNames();
   loadPokemon('1');
 }
 
 loadCurrentPokemon() async {
   InputElement inputElement = querySelector('#search-field');
+  if (!isPokemon(inputElement.value)) return;
   await loadPokemon(inputElement.value);
 }
 
 loadPokemon(pokemon) async {
+  if (!isPokemon(pokemon)) return;
+
   var url = 'https://pokeapi.co/api/v2/pokemon/' + pokemon;
   var json = await requestJson(url);
 
@@ -47,15 +46,31 @@ requestJson(url) async {
   return jsonDecode(response);
 }
 
+var names;
+
 registerPokemonNames() async {
-  var names = await loadPokemonNames();
+  names = await loadPokemonNames();
 
   InputElement inputElement = querySelector('#search-field');
   autocomplete(inputElement, names);
 }
 
+isPokemon(pokemon) {
+  if (pokemon == '') return false;
+  var first = pokemon.codeUnitAt(0);
+  if (isNumber(first)) {
+    try {
+      var i = int.parse(pokemon);
+      return i <= names.length && i >= 1;
+    } catch (e) {
+      return names.contains(pokemon.toLowerCase());
+    }
+  }
+  return names.contains(pokemon.toLowerCase());
+}
+
 autocomplete(input, options) {
-  var currentChoiceId;
+  var currentChoiceId = -1;
 
   input.onKeyUp.listen((event) {
     if (event.keyCode >= 37 && event.keyCode <= 40) {
@@ -92,16 +107,11 @@ autocomplete(input, options) {
 shouldShowOptions(text) {
   if (text == '') return false;
   var first = text.codeUnitAt(0);
-  return !(first == '0' ||
-      first == '1' ||
-      first == '2' ||
-      first == '3' ||
-      first == '4' ||
-      first == '5' ||
-      first == '6' ||
-      first == '7' ||
-      first == '8' ||
-      first == '9');
+  return !isNumber(first);
+}
+
+isNumber(letterId) {
+  return letterId >= 48 && letterId <= 57;
 }
 
 addActive(elements, currentChoiceId) {
