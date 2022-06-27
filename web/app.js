@@ -3284,6 +3284,19 @@
       throw error;
       throw A.wrapException("unreachable");
     },
+    List_List$of(elements, growable, $E) {
+      var t1 = A.List_List$_of(elements, $E);
+      return t1;
+    },
+    List_List$_of(elements, $E) {
+      var list, t1;
+      if (Array.isArray(elements))
+        return A._setArrayType(elements.slice(0), $E._eval$1("JSArray<0>"));
+      list = A._setArrayType([], $E._eval$1("JSArray<0>"));
+      for (t1 = J.get$iterator$ax(elements); t1.moveNext$0();)
+        B.JSArray_methods.add$1(list, t1.get$current());
+      return list;
+    },
     RegExp_RegExp(source) {
       return new A.JSSyntaxRegExp(source, A.JSSyntaxRegExp_makeNative(source, false, true, false, false, false));
     },
@@ -4043,12 +4056,80 @@
       input.toString;
       t2 = type$._ElementEventStreamImpl_legacy_KeyboardEvent;
       t3 = t2._eval$1("~(1)?");
-      t4 = t3._as(new A.autocomplete_closure(t1, new A.autocomplete_closeAllLists(), input, options));
+      t4 = t3._as(new A.autocomplete_closure(t1, input, options));
       type$.nullable_void_Function._as(null);
       t2 = t2._precomputed1;
       A._EventStreamSubscription$(input, "keyup", t4, false, t2);
-      A._EventStreamSubscription$(input, "keydown", t3._as(new A.autocomplete_closure0(t1, new A.autocomplete_addActive(t1, new A.autocomplete_removeActive()))), false, t2);
-      A._EventStreamSubscription$(document, "click", type$.nullable_void_Function_legacy_MouseEvent._as(new A.autocomplete_closure1(new A.autocomplete_closeAllListsForElement(input))), false, type$.legacy_MouseEvent);
+      A._EventStreamSubscription$(input, "keydown", t3._as(new A.autocomplete_closure0(t1)), false, t2);
+      A._EventStreamSubscription$(document, "click", type$.nullable_void_Function_legacy_MouseEvent._as(new A.autocomplete_closure1(input)), false, type$.legacy_MouseEvent);
+    },
+    shouldShowOptions(text) {
+      if (text === "")
+        return false;
+      J._codeUnitAt$1$s(text, 0);
+      return true;
+    },
+    addActive(elements, currentChoiceId) {
+      var t1, t2, t3;
+      A.removeActive(elements);
+      t1 = elements._this.childNodes;
+      t2 = t1.length;
+      if (typeof currentChoiceId !== "number")
+        return currentChoiceId.$ge();
+      if (currentChoiceId >= t2)
+        currentChoiceId = 0;
+      t3 = A._asIntS(currentChoiceId < 0 ? t2 - 1 : currentChoiceId);
+      if (!(t3 >= 0 && t3 < t2))
+        return A.ioore(t1, t3);
+      J.get$classes$x(t1[t3]).add$1(0, "autocomplete-active");
+      return t3;
+    },
+    removeActive(elements) {
+      var t1, i, t2;
+      for (t1 = elements._this, i = 0; t2 = t1.childNodes, i < t2.length; ++i)
+        J.get$classes$x(t2[i]).remove$1(0, "autocomplete-active");
+    },
+    closeAllLists() {
+      var i, t3, t4,
+        t1 = type$.legacy_Element,
+        t2 = document;
+      A.checkTypeBound(t1, type$.Element, "T", "querySelectorAll");
+      t2 = t2.querySelectorAll(".autocomplete-items");
+      for (i = 0; i < t2.length; ++i) {
+        t3 = t1._as(t2[i]);
+        t4 = t3.parentNode;
+        if (t4 != null)
+          t4.removeChild(t3);
+      }
+    },
+    closeAllListsForElement(element, inputElement) {
+      var t3, i, t4, t5,
+        t1 = type$.legacy_Element,
+        t2 = document;
+      A.checkTypeBound(t1, type$.Element, "T", "querySelectorAll");
+      t2 = t2.querySelectorAll(".autocomplete-items");
+      for (t3 = element !== inputElement, i = 0; i < t2.length; ++i) {
+        t4 = t1._as(t2[i]);
+        if (element !== t4 && t3) {
+          t5 = t4.parentNode;
+          if (t5 != null)
+            t5.removeChild(t4);
+        }
+      }
+    },
+    createOptionElement(inputElement, elementList, option, optionStart, optionEnd) {
+      var t1, t2,
+        optionElement = document.createElement("div");
+      B.DivElement_methods.setInnerHtml$1(optionElement, "<strong>" + optionStart + "</strong>");
+      B.DivElement_methods.setInnerHtml$1(optionElement, J.$add$ansx(optionElement.innerHTML, optionEnd));
+      t1 = optionElement.innerHTML;
+      A._asStringS(option);
+      B.DivElement_methods.setInnerHtml$1(optionElement, J.$add$ansx(t1, "<input type='hidden' value='" + option + "'>"));
+      t1 = type$._ElementEventStreamImpl_legacy_MouseEvent;
+      t2 = t1._eval$1("~(1)?")._as(new A.createOptionElement_closure(inputElement, option));
+      type$.nullable_void_Function._as(null);
+      A._EventStreamSubscription$(optionElement, "click", t2, false, t1._precomputed1);
+      elementList.appendChild(optionElement);
     },
     loadPokemonNames() {
       var $async$goto = 0,
@@ -4131,35 +4212,20 @@
     },
     main_closure0: function main_closure0() {
     },
-    autocomplete_removeActive: function autocomplete_removeActive() {
-    },
-    autocomplete_addActive: function autocomplete_addActive(t0, t1) {
+    autocomplete_closure: function autocomplete_closure(t0, t1, t2) {
       this._box_0 = t0;
-      this.removeActive = t1;
+      this.input = t1;
+      this.options = t2;
     },
-    autocomplete_closeAllLists: function autocomplete_closeAllLists() {
-    },
-    autocomplete_closeAllListsForElement: function autocomplete_closeAllListsForElement(t0) {
-      this.input = t0;
-    },
-    autocomplete_closure: function autocomplete_closure(t0, t1, t2, t3) {
-      var _ = this;
-      _._box_0 = t0;
-      _.closeAllLists = t1;
-      _.input = t2;
-      _.options = t3;
-    },
-    autocomplete__closure: function autocomplete__closure(t0, t1, t2) {
-      this.input = t0;
-      this.option = t1;
-      this.closeAllLists = t2;
-    },
-    autocomplete_closure0: function autocomplete_closure0(t0, t1) {
+    autocomplete_closure0: function autocomplete_closure0(t0) {
       this._box_0 = t0;
-      this.addActive = t1;
     },
     autocomplete_closure1: function autocomplete_closure1(t0) {
-      this.closeAllListsForElement = t0;
+      this.input = t0;
+    },
+    createOptionElement_closure: function createOptionElement_closure(t0, t1) {
+      this.inputElement = t0;
+      this.option = t1;
     },
     printString(string) {
       if (typeof dartPrint == "function") {
@@ -4601,6 +4667,24 @@
         A.throwExpression(A.UnsupportedError$("add"));
       receiver.push(value);
     },
+    addAll$1(receiver, collection) {
+      A._arrayInstanceType(receiver)._eval$1("Iterable<1>")._as(collection);
+      if (!!receiver.fixed$length)
+        A.throwExpression(A.UnsupportedError$("addAll"));
+      this._addAllFromArray$1(receiver, collection);
+      return;
+    },
+    _addAllFromArray$1(receiver, array) {
+      var len, i;
+      type$.JSArray_dynamic._as(array);
+      len = array.length;
+      if (len === 0)
+        return;
+      if (receiver === array)
+        throw A.wrapException(A.ConcurrentModificationError$(receiver));
+      for (i = 0; i < len; ++i)
+        receiver.push(array[i]);
+    },
     elementAt$1(receiver, index) {
       if (!(index >= 0 && index < receiver.length))
         return A.ioore(receiver, index);
@@ -4662,6 +4746,13 @@
       if (index >= t1)
         throw A.wrapException(A.diagnoseIndexError(receiver, index));
       receiver[index] = value;
+    },
+    $add(receiver, other) {
+      var t1 = A._arrayInstanceType(receiver);
+      t1._eval$1("List<1>")._as(other);
+      t1 = A.List_List$of(receiver, true, t1._precomputed1);
+      this.addAll$1(t1, other);
+      return t1;
     },
     $isIterable: 1,
     $isList: 1
@@ -4730,6 +4821,9 @@
       factor = Math.pow(2, floorLog2);
       scaled = absolute < 1 ? absolute / factor : factor / absolute;
       return ((scaled * 9007199254740992 | 0) + (scaled * 3542243181176521 | 0)) * 599197 + floorLog2 * 1259 & 536870911;
+    },
+    $add(receiver, other) {
+      return receiver + other;
     },
     $sub(receiver, other) {
       return receiver - other;
@@ -5265,13 +5359,13 @@
     call$0() {
       this.callback.call$0();
     },
-    $signature: 2
+    $signature: 3
   };
   A._AsyncRun__scheduleImmediateWithSetImmediate_internalCallback.prototype = {
     call$0() {
       this.callback.call$0();
     },
-    $signature: 2
+    $signature: 3
   };
   A._TimerImpl.prototype = {
     _TimerImpl$2(milliseconds, callback) {
@@ -6007,6 +6101,13 @@
     },
     elementAt$1(receiver, index) {
       return this.$index(receiver, index);
+    },
+    $add(receiver, other) {
+      var t1 = A.instanceType(receiver);
+      t1._eval$1("List<ListMixin.E>")._as(other);
+      t1 = A.List_List$of(receiver, true, t1._eval$1("ListMixin.E"));
+      B.JSArray_methods.addAll$1(t1, other);
+      return t1;
     },
     toString$0(receiver) {
       return A.IterableBase_iterableToFullString(receiver, "[", "]");
@@ -7346,73 +7447,9 @@
     },
     $signature: 28
   };
-  A.autocomplete_removeActive.prototype = {
-    call$1(elements) {
-      var t1, i, t2;
-      for (t1 = elements._this, i = 0; t2 = t1.childNodes, i < t2.length; ++i)
-        J.get$classes$x(t2[i]).remove$1(0, "autocomplete-active");
-    },
-    $signature: 1
-  };
-  A.autocomplete_addActive.prototype = {
-    call$1(elements) {
-      var t1, t2, t3, t4;
-      this.removeActive.call$1(elements);
-      t1 = this._box_0;
-      t2 = t1.currentChoiceId;
-      t3 = elements._this;
-      t4 = t3.childNodes.length;
-      if (typeof t2 !== "number")
-        return t2.$ge();
-      if (t2 >= t4) {
-        t1.currentChoiceId = 0;
-        t2 = 0;
-      }
-      t1 = t2 < 0 ? t1.currentChoiceId = t3.childNodes.length - 1 : t2;
-      t3 = t3.childNodes;
-      if (!(t1 >= 0 && t1 < t3.length))
-        return A.ioore(t3, t1);
-      J.get$classes$x(t3[t1]).add$1(0, "autocomplete-active");
-    },
-    $signature: 1
-  };
-  A.autocomplete_closeAllLists.prototype = {
-    call$0() {
-      var i, t3, t4,
-        t1 = type$.legacy_Element,
-        t2 = document;
-      A.checkTypeBound(t1, type$.Element, "T", "querySelectorAll");
-      t2 = t2.querySelectorAll(".autocomplete-items");
-      for (i = 0; i < t2.length; ++i) {
-        t3 = t1._as(t2[i]);
-        t4 = t3.parentNode;
-        if (t4 != null)
-          t4.removeChild(t3);
-      }
-    },
-    $signature: 2
-  };
-  A.autocomplete_closeAllListsForElement.prototype = {
-    call$1(element) {
-      var t3, i, t4, t5,
-        t1 = type$.legacy_Element,
-        t2 = document;
-      A.checkTypeBound(t1, type$.Element, "T", "querySelectorAll");
-      t2 = t2.querySelectorAll(".autocomplete-items");
-      for (t3 = this.input, t3 = element == null ? t3 != null : element !== t3, i = 0; i < t2.length; ++i) {
-        t4 = t1._as(t2[i]);
-        if (element !== t4 && t3) {
-          t5 = t4.parentNode;
-          if (t5 != null)
-            t5.removeChild(t4);
-        }
-      }
-    },
-    $signature: 1
-  };
   A.autocomplete_closure.prototype = {
     call$1($event) {
-      var value, t3, elementList, valueLength, t4, t5, t6, t7, t8, unequalFound, i, t9, option, optionLength, optionStart, optionElement, _this = this,
+      var value, elementList, valueLength, t3, unequalFound, i, t4, option, optionLength, optionStart,
         t1 = J.getInterceptor$x($event),
         t2 = t1.get$keyCode($event);
       if (typeof t2 !== "number")
@@ -7426,103 +7463,77 @@
         t1 = false;
       if (t1)
         return false;
-      t1 = _this.closeAllLists;
-      t1.call$0();
-      t2 = _this.input;
-      value = t2.value;
-      if (value === "")
+      A.closeAllLists();
+      t1 = this.input;
+      value = t1.value;
+      if (!A.shouldShowOptions(value))
         return false;
-      J._codeUnitAt$1$s(value, 0);
-      _this._box_0.currentChoiceId = -1;
-      t3 = document;
-      elementList = t3.createElement("div");
+      this._box_0.currentChoiceId = -1;
+      elementList = document.createElement("div");
       elementList.id = "autocomplete-list";
       elementList.className = "autocomplete-items";
-      t2.parentNode.appendChild(elementList);
+      t1.parentNode.appendChild(elementList);
       valueLength = value.length;
-      t4 = _this.options;
-      t5 = J.getInterceptor$asx(t4);
-      t6 = type$._ElementEventStreamImpl_legacy_MouseEvent;
-      t7 = t6._eval$1("~(1)?");
-      t8 = type$.nullable_void_Function;
-      t6 = t6._precomputed1;
+      t2 = this.options;
+      t3 = J.getInterceptor$asx(t2);
       unequalFound = 0;
       i = 0;
       while (true) {
-        t9 = A._asNumS(t5.get$length(t4));
-        if (typeof t9 !== "number")
-          return A.iae(t9);
-        if (!(i < t9))
+        t4 = A._asNumS(t3.get$length(t2));
+        if (typeof t4 !== "number")
+          return A.iae(t4);
+        if (!(i < t4))
           break;
-        option = t5.$index(t4, i);
-        t9 = J.getInterceptor$asx(option);
-        optionLength = t9.get$length(option);
+        option = t3.$index(t2, i);
+        t4 = J.getInterceptor$asx(option);
+        optionLength = t4.get$length(option);
         if (typeof optionLength !== "number")
           return optionLength.$ge();
         if (optionLength >= valueLength) {
-          optionStart = t9.substring$2(option, 0, valueLength);
+          optionStart = t4.substring$2(option, 0, valueLength);
           if (optionStart.toUpperCase() === value.toUpperCase()) {
             if (optionLength !== valueLength)
               ++unequalFound;
-            optionElement = t3.createElement("div");
-            B.DivElement_methods.setInnerHtml$1(optionElement, "<strong>" + optionStart + "</strong>");
-            B.DivElement_methods.setInnerHtml$1(optionElement, J.$add$ansx(optionElement.innerHTML, t9.substring$2(option, valueLength, optionLength)));
-            t9 = optionElement.innerHTML;
-            A._asStringS(option);
-            B.DivElement_methods.setInnerHtml$1(optionElement, J.$add$ansx(t9, "<input type='hidden' value='" + option + "'>"));
-            t9 = t7._as(new A.autocomplete__closure(t2, option, t1));
-            t8._as(null);
-            A._EventStreamSubscription$(optionElement, "click", t9, false, t6);
-            elementList.appendChild(optionElement);
+            A.createOptionElement(t1, elementList, option, optionStart, t4.substring$2(option, valueLength, t4.get$length(option)));
           }
         }
         ++i;
       }
       if (unequalFound === 0)
-        t1.call$0();
+        A.closeAllLists();
     },
     $signature: 29
   };
-  A.autocomplete__closure.prototype = {
-    call$1(e) {
-      type$.legacy_MouseEvent._as(e);
-      B.InputElement_methods.set$value(this.input, this.option);
-      this.closeAllLists.call$0();
-      A.loadCurrentPokemon();
-    },
-    $signature: 6
-  };
   A.autocomplete_closure0.prototype = {
     call$1($event) {
-      var t3, view, _this = this,
+      var currentChoiceId, t3, view,
         t1 = document,
         list = t1.querySelector("#autocomplete-list"),
         t2 = J.getInterceptor$x($event);
       if (t2.get$keyCode($event) === 40) {
-        t1 = _this._box_0;
-        t2 = t1.currentChoiceId;
-        if (typeof t2 !== "number")
-          return t2.$add();
-        t1.currentChoiceId = t2 + 1;
+        t1 = this._box_0;
+        t1.currentChoiceId = J.$add$ansx(t1.currentChoiceId, 1);
         if (A.boolConversionCheck(list.hasChildNodes()))
-          _this.addActive.call$1(new A._ChildNodeListLazy(list));
+          t1.currentChoiceId = A.addActive(new A._ChildNodeListLazy(list), t1.currentChoiceId);
       } else if (t2.get$keyCode($event) === 38) {
-        t1 = _this._box_0;
+        t1 = this._box_0;
         t2 = t1.currentChoiceId;
         if (typeof t2 !== "number")
           return t2.$sub();
         t1.currentChoiceId = t2 - 1;
-        if (A.boolConversionCheck(list.hasChildNodes()))
-          _this.addActive.call$1(new A._ChildNodeListLazy(list));
+        if (A.boolConversionCheck(list.hasChildNodes())) {
+          currentChoiceId = t1.currentChoiceId = new A._ChildNodeListLazy(list);
+          A.addActive(currentChoiceId, currentChoiceId);
+        }
       } else if (t2.get$keyCode($event) === 13) {
         $event.preventDefault();
-        t2 = _this._box_0;
+        t2 = this._box_0;
         t3 = t2.currentChoiceId;
         if (typeof t3 !== "number")
           return t3.$gt();
         if (t3 > -1) {
           if (A.boolConversionCheck(list.hasChildNodes())) {
-            t2 = t2.currentChoiceId;
+            t2 = A._asIntS(t2.currentChoiceId);
             t2 = B.NodeList_methods.$index(list.childNodes, t2);
             view = window;
             $event = type$.MouseEvent._as(t1.createEvent("MouseEvent"));
@@ -7538,7 +7549,16 @@
   };
   A.autocomplete_closure1.prototype = {
     call$1(e) {
-      this.closeAllListsForElement.call$1(A._convertNativeToDart_EventTarget(type$.legacy_MouseEvent._as(e).target));
+      A.closeAllListsForElement(A._convertNativeToDart_EventTarget(type$.legacy_MouseEvent._as(e).target), this.input);
+    },
+    $signature: 6
+  };
+  A.createOptionElement_closure.prototype = {
+    call$1(e) {
+      type$.legacy_MouseEvent._as(e);
+      B.InputElement_methods.set$value(this.inputElement, this.option);
+      A.closeAllLists();
+      A.loadCurrentPokemon();
     },
     $signature: 6
   };
@@ -7560,9 +7580,9 @@
       _instance = hunkHelpers.installInstanceTearOff,
       _instance_2_u = hunkHelpers._instance_2u,
       _static = hunkHelpers.installStaticTearOff;
-    _static_1(A, "async__AsyncRun__scheduleImmediateJsOverride$closure", "_AsyncRun__scheduleImmediateJsOverride", 3);
-    _static_1(A, "async__AsyncRun__scheduleImmediateWithSetImmediate$closure", "_AsyncRun__scheduleImmediateWithSetImmediate", 3);
-    _static_1(A, "async__AsyncRun__scheduleImmediateWithTimer$closure", "_AsyncRun__scheduleImmediateWithTimer", 3);
+    _static_1(A, "async__AsyncRun__scheduleImmediateJsOverride$closure", "_AsyncRun__scheduleImmediateJsOverride", 2);
+    _static_1(A, "async__AsyncRun__scheduleImmediateWithSetImmediate$closure", "_AsyncRun__scheduleImmediateWithSetImmediate", 2);
+    _static_1(A, "async__AsyncRun__scheduleImmediateWithTimer$closure", "_AsyncRun__scheduleImmediateWithTimer", 2);
     _static_0(A, "async___startMicrotaskLoop$closure", "_startMicrotaskLoop", 0);
     _instance(A._Completer.prototype, "get$completeError", 0, 1, null, ["call$2", "call$1"], ["completeError$2", "completeError$1"], 15, 0, 0);
     _instance_2_u(A._Future.prototype, "get$_completeError", "_completeError$2", 16);
@@ -7586,14 +7606,14 @@
     _inheritMany(A.ListIterable, [A.MappedListIterable, A._JsonMapKeyIterable]);
     _inherit(A.WhereIterator, A.Iterator);
     _inherit(A.NullError, A.TypeError);
-    _inheritMany(A.Closure, [A.Closure0Args, A.Closure2Args, A.TearOffClosure, A.initHooks_closure, A.initHooks_closure1, A._AsyncRun__initializeScheduleImmediate_internalCallback, A._AsyncRun__initializeScheduleImmediate_closure, A._awaitOnObject_closure, A._Future__chainForeignFuture_closure, A._Future__propagateToListeners_handleWhenCompleteCallback_closure, A.Stream_length_closure, A._RootZone_bindUnaryCallbackGuarded_closure, A.Element_Element$html_closure, A.HttpRequest_getString_closure, A.HttpRequest_request_closure, A._EventStreamSubscription_closure, A.NodeValidatorBuilder_allowsElement_closure, A.NodeValidatorBuilder_allowsAttribute_closure, A._SimpleNodeValidator_closure, A._SimpleNodeValidator_closure0, A._TemplatingNodeValidator_closure, A.CssClassSetImpl_add_closure, A.main_closure, A.main_closure0, A.autocomplete_removeActive, A.autocomplete_addActive, A.autocomplete_closeAllListsForElement, A.autocomplete_closure, A.autocomplete__closure, A.autocomplete_closure0, A.autocomplete_closure1]);
+    _inheritMany(A.Closure, [A.Closure0Args, A.Closure2Args, A.TearOffClosure, A.initHooks_closure, A.initHooks_closure1, A._AsyncRun__initializeScheduleImmediate_internalCallback, A._AsyncRun__initializeScheduleImmediate_closure, A._awaitOnObject_closure, A._Future__chainForeignFuture_closure, A._Future__propagateToListeners_handleWhenCompleteCallback_closure, A.Stream_length_closure, A._RootZone_bindUnaryCallbackGuarded_closure, A.Element_Element$html_closure, A.HttpRequest_getString_closure, A.HttpRequest_request_closure, A._EventStreamSubscription_closure, A.NodeValidatorBuilder_allowsElement_closure, A.NodeValidatorBuilder_allowsAttribute_closure, A._SimpleNodeValidator_closure, A._SimpleNodeValidator_closure0, A._TemplatingNodeValidator_closure, A.CssClassSetImpl_add_closure, A.main_closure, A.main_closure0, A.autocomplete_closure, A.autocomplete_closure0, A.autocomplete_closure1, A.createOptionElement_closure]);
     _inheritMany(A.TearOffClosure, [A.StaticClosure, A.BoundClosure]);
     _inherit(A._AssertionError, A.AssertionError);
     _inherit(A.MapBase, A.MapMixin);
     _inheritMany(A.MapBase, [A.JsLinkedHashMap, A._JsonMap, A._AttributeMap]);
     _inheritMany(A.Closure2Args, [A.initHooks_closure0, A._awaitOnObject_closure0, A._wrapJsFunctionForAsync_closure, A._Future__chainForeignFuture_closure0, A.MapBase_mapToString_closure, A._ValidatingTreeSanitizer_sanitizeTree_walk]);
     _inherit(A._TypeError, A._Error);
-    _inheritMany(A.Closure0Args, [A._AsyncRun__scheduleImmediateJsOverride_internalCallback, A._AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, A._TimerImpl_internalCallback, A._Future__addListener_closure, A._Future__prependListeners_closure, A._Future__chainForeignFuture_closure1, A._Future__asyncCompleteWithValue_closure, A._Future__chainFuture_closure, A._Future__asyncCompleteError_closure, A._Future__propagateToListeners_handleWhenCompleteCallback, A._Future__propagateToListeners_handleValueCallback, A._Future__propagateToListeners_handleError, A.Stream_length_closure0, A._rootHandleError_closure, A._RootZone_bindCallbackGuarded_closure, A.autocomplete_closeAllLists]);
+    _inheritMany(A.Closure0Args, [A._AsyncRun__scheduleImmediateJsOverride_internalCallback, A._AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, A._TimerImpl_internalCallback, A._Future__addListener_closure, A._Future__prependListeners_closure, A._Future__chainForeignFuture_closure1, A._Future__asyncCompleteWithValue_closure, A._Future__chainFuture_closure, A._Future__asyncCompleteError_closure, A._Future__propagateToListeners_handleWhenCompleteCallback, A._Future__propagateToListeners_handleValueCallback, A._Future__propagateToListeners_handleError, A.Stream_length_closure0, A._rootHandleError_closure, A._RootZone_bindCallbackGuarded_closure]);
     _inherit(A._AsyncCompleter, A._Completer);
     _inherit(A._RootZone, A._Zone);
     _inherit(A._SetBase, A.__SetBase_Object_SetMixin);
@@ -7643,7 +7663,7 @@
     typeUniverse: {eC: new Map(), tR: {}, eT: {}, tPV: {}, sEA: []},
     mangledGlobalNames: {int: "int", double: "double", num: "num", String: "String", bool: "bool", Null: "Null", List: "List"},
     mangledNames: {},
-    types: ["~()", "Null(@)", "Null()", "~(~())", "bool(NodeValidator)", "bool(String)", "Null(MouseEvent*)", "bool(Element,String,String,_Html5NodeValidator)", "@(@)", "@(@,String)", "@(String)", "Null(~())", "~(@)", "Null(@,StackTrace)", "~(int,@)", "~(Object[StackTrace?])", "~(Object,StackTrace)", "Null(Object,StackTrace)", "_Future<@>(@)", "~(Object?,Object?)", "bool(Node)", "String(HttpRequest)", "~(ProgressEvent)", "~(Event)", "String(String)", "~(Node,Node?)", "bool(Set<String>)", "Future<Null>*(MouseEvent*)", "Null(KeyboardEvent*)", "bool*(@)"],
+    types: ["~()", "Null(@)", "~(~())", "Null()", "bool(NodeValidator)", "bool(String)", "Null(MouseEvent*)", "bool(Element,String,String,_Html5NodeValidator)", "@(@)", "@(@,String)", "@(String)", "Null(~())", "~(@)", "Null(@,StackTrace)", "~(int,@)", "~(Object[StackTrace?])", "~(Object,StackTrace)", "Null(Object,StackTrace)", "_Future<@>(@)", "~(Object?,Object?)", "bool(Node)", "String(HttpRequest)", "~(ProgressEvent)", "~(Event)", "String(String)", "~(Node,Node?)", "bool(Set<String>)", "Future<Null>*(MouseEvent*)", "Null(KeyboardEvent*)", "bool*(@)"],
     interceptorsByTag: null,
     leafTags: null,
     arrayRti: Symbol("$ti")

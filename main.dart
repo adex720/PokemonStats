@@ -55,35 +55,6 @@ registerPokemonNames() async {
 autocomplete(input, options) {
   var currentChoiceId;
 
-  removeActive(elements) {
-    for (var i = 0; i < elements.length; i++) {
-      elements[i].classes.remove("autocomplete-active");
-    }
-  }
-
-  addActive(elements) {
-    removeActive(elements);
-    if (currentChoiceId >= elements.length) currentChoiceId = 0;
-    if (currentChoiceId < 0) currentChoiceId = (elements.length - 1);
-    elements[currentChoiceId].classes.add("autocomplete-active");
-  }
-
-  closeAllLists() {
-    var x = querySelectorAll(".autocomplete-items");
-    for (var i = 0; i < x.length; i++) {
-      x[i].remove();
-    }
-  }
-
-  closeAllListsForElement(element) {
-    var x = querySelectorAll(".autocomplete-items");
-    for (var i = 0; i < x.length; i++) {
-      if (element != x[i] && element != input) {
-        x[i].remove();
-      }
-    }
-  }
-
   input.onKeyUp.listen((event) {
     if (event.keyCode >= 37 && event.keyCode <= 40) {
       return false;
@@ -92,49 +63,27 @@ autocomplete(input, options) {
     closeAllLists();
 
     var value = input.value;
-    if (value == '') return false;
-    var first = value.codeUnitAt(0);
-    if (first == '0' ||
-        first == '1' ||
-        first == '2' ||
-        first == '3' ||
-        first == '4' ||
-        first == '5' ||
-        first == '6' ||
-        first == '7' ||
-        first == '8' ||
-        first == '9') return false;
+    if (!shouldShowOptions(value)) return false;
 
     currentChoiceId = -1;
 
-    var elementList = Element.div();
-    elementList.id = "autocomplete-list";
-    elementList.className = "autocomplete-items";
-    input.parentNode.nodes.add(elementList);
+    Element elementList = createElementList(input);
 
-    var valueLength = value.length; // amount of letters typed on input element
+    // amount of letters typed on input element
+    var valueLength = value.length;
     var unequalFound = 0;
     for (var i = 0; i < options.length; i++) {
       var option = options[i];
-      var optionLength = option.length; // amount of letters on current option
+      // amount of letters on current option
+      var optionLength = option.length;
       if (optionLength >= valueLength) {
-        var optionStart = option.substring(0,
-            valueLength); // start of current option, containing same amount of letters as currently typed on input element
+        // start of current option, containing same amount of letters as currently typed on input element
+        var optionStart = option.substring(0, valueLength);
         if (optionStart.toUpperCase() == value.toUpperCase()) {
           if (optionLength != valueLength) unequalFound++;
-
-          var optionElement = Element.div();
-          optionElement.innerHtml = "<strong>" + optionStart + "</strong>";
-          optionElement.innerHtml +=
-              option.substring(valueLength, optionLength);
-          optionElement.innerHtml +=
-              "<input type='hidden' value='" + option + "'>";
-          optionElement.onClick.listen((e) {
-            input.value = option;
-            closeAllLists();
-            loadCurrentPokemon();
-          });
-          elementList.nodes.add(optionElement);
+          var optionEnd = option.substring(valueLength, option.length);
+          createOptionElement(
+              input, elementList, option, optionStart, optionEnd);
         }
       }
     }
@@ -147,10 +96,14 @@ autocomplete(input, options) {
 
     if (event.keyCode == 40) {
       currentChoiceId++;
-      if (list.hasChildNodes()) addActive(list.nodes);
+      if (list.hasChildNodes()) {
+        currentChoiceId = addActive(list.nodes, currentChoiceId);
+      }
     } else if (event.keyCode == 38) {
       currentChoiceId--;
-      if (list.hasChildNodes()) addActive(list.nodes);
+      if (list.hasChildNodes()) {
+        addActive(currentChoiceId = list.nodes, currentChoiceId);
+      }
     } else if (event.keyCode == 13) {
       event.preventDefault();
       if (currentChoiceId > -1) {
@@ -163,8 +116,75 @@ autocomplete(input, options) {
   });
 
   document.onClick.listen((e) {
-    closeAllListsForElement(e.target);
+    closeAllListsForElement(e.target, input);
   });
+}
+
+shouldShowOptions(text) {
+  if (text == '') return false;
+  var first = text.codeUnitAt(0);
+  if (first == '0' ||
+      first == '1' ||
+      first == '2' ||
+      first == '3' ||
+      first == '4' ||
+      first == '5' ||
+      first == '6' ||
+      first == '7' ||
+      first == '8' ||
+      first == '9') return false;
+  return true;
+}
+
+addActive(elements, currentChoiceId) {
+  removeActive(elements);
+  if (currentChoiceId >= elements.length) currentChoiceId = 0;
+  if (currentChoiceId < 0) currentChoiceId = (elements.length - 1);
+  elements[currentChoiceId].classes.add('autocomplete-active');
+  return currentChoiceId;
+}
+
+removeActive(elements) {
+  for (var i = 0; i < elements.length; i++) {
+    elements[i].classes.remove('autocomplete-active');
+  }
+}
+
+closeAllLists() {
+  var items = querySelectorAll('.autocomplete-items');
+  for (var i = 0; i < items.length; i++) {
+    items[i].remove();
+  }
+}
+
+closeAllListsForElement(element, inputElement) {
+  var items = querySelectorAll('.autocomplete-items');
+  for (var i = 0; i < items.length; i++) {
+    if (element != items[i] && element != inputElement) {
+      items[i].remove();
+    }
+  }
+}
+
+createElementList(inputElement) {
+  var elementList = Element.div();
+  elementList.id = 'autocomplete-list';
+  elementList.className = 'autocomplete-items';
+  inputElement.parentNode.nodes.add(elementList);
+  return elementList;
+}
+
+createOptionElement(inputElement, elementList, option, optionStart, optionEnd) {
+  var optionElement = Element.div();
+  optionElement.innerHtml = '<strong>' + optionStart + '</strong>';
+  optionElement.innerHtml += optionEnd;
+  optionElement.innerHtml += '<input type="hidden" value="' + option + '">';
+  optionElement.onClick.listen((e) {
+    inputElement.value = option;
+    closeAllLists();
+    loadCurrentPokemon();
+  });
+  elementList.nodes.add(optionElement);
 }
 
 runClick(target) {
