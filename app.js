@@ -3782,7 +3782,7 @@
     loadPokemon(pokemon) {
       var $async$goto = 0,
         $async$completer = A._makeAsyncAwaitCompleter(type$.dynamic),
-        $async$returnValue, speedMod, t2, physical, special, lower, higher, attack, defence, stamina, defenceSqrt, staminaSqrt, cp, json, t1, $name, stats;
+        $async$returnValue, t2, otherLetters, speedMod, physical, special, lower, higher, attack, defence, stamina, defenceSqrt, staminaSqrt, cp, json, t1, $name, stats;
       var $async$loadPokemon = A._wrapJsFunctionForAsync(function($async$errorCode, $async$result) {
         if ($async$errorCode === 1)
           return A._asyncRethrow($async$result, $async$completer);
@@ -3798,8 +3798,11 @@
               t1 = J.getInterceptor$asx(json);
               $name = J.$index$asx(J.$index$asx(t1.$index(json, "forms"), 0), "name");
               stats = A.getStatValues(t1.$index(json, "stats"));
+              t1 = J.getInterceptor$s($name);
+              t2 = t1.substring$2($name, 0, 1);
+              otherLetters = t1.substring$2($name, 1, t1.get$length($name));
               t1 = document;
-              J.set$text$x(t1.querySelector("#name"), A._asStringS($name));
+              J.set$text$x(t1.querySelector("#name"), t2.toUpperCase() + otherLetters);
               if (5 >= stats.length) {
                 $async$returnValue = A.ioore(stats, 5);
                 // goto return

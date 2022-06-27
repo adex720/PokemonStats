@@ -259,7 +259,10 @@ getCp(attack, defence, stamina) {
 }
 
 switchName(name) {
-  querySelector('#name').text = name;
+  var firstLetter = name.substring(0, 1).toUpperCase();
+  var otherLetters = name.substring(1, name.length);
+  var formattedName = firstLetter + otherLetters;
+  querySelector('#name').text = formattedName;
 }
 
 setStats(stats) {
