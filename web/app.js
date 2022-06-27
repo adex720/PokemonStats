@@ -3284,19 +3284,6 @@
       throw error;
       throw A.wrapException("unreachable");
     },
-    List_List$of(elements, growable, $E) {
-      var t1 = A.List_List$_of(elements, $E);
-      return t1;
-    },
-    List_List$_of(elements, $E) {
-      var list, t1;
-      if (Array.isArray(elements))
-        return A._setArrayType(elements.slice(0), $E._eval$1("JSArray<0>"));
-      list = A._setArrayType([], $E._eval$1("JSArray<0>"));
-      for (t1 = J.get$iterator$ax(elements); t1.moveNext$0();)
-        B.JSArray_methods.add$1(list, t1.get$current());
-      return list;
-    },
     RegExp_RegExp(source) {
       return new A.JSSyntaxRegExp(source, A.JSSyntaxRegExp_makeNative(source, false, true, false, false, false));
     },
@@ -3376,6 +3363,9 @@
     },
     FormatException$(message, source) {
       return new A.FormatException(message, source);
+    },
+    print(object) {
+      A.printString(A.S(object));
     },
     Error: function Error() {
     },
@@ -4075,19 +4065,18 @@
       return true;
     },
     addActive(elements, currentChoiceId) {
-      var t1, t2, t3;
+      var t1, t2;
       A.removeActive(elements);
       t1 = elements._this.childNodes;
       t2 = t1.length;
-      if (typeof currentChoiceId !== "number")
-        return currentChoiceId.$ge();
       if (currentChoiceId >= t2)
         currentChoiceId = 0;
-      t3 = A._asIntS(currentChoiceId < 0 ? t2 - 1 : currentChoiceId);
-      if (!(t3 >= 0 && t3 < t2))
-        return A.ioore(t1, t3);
-      J.get$classes$x(t1[t3]).add$1(0, "autocomplete-active");
-      return t3;
+      if (currentChoiceId < 0)
+        currentChoiceId = t2 - 1;
+      if (!(currentChoiceId >= 0 && currentChoiceId < t2))
+        return A.ioore(t1, currentChoiceId);
+      J.get$classes$x(t1[currentChoiceId]).add$1(0, "autocomplete-active");
+      return currentChoiceId;
     },
     removeActive(elements) {
       var t1, i, t2;
@@ -4203,7 +4192,7 @@
     getPokedexNumber(json, $name) {
       var $async$goto = 0,
         $async$completer = A._makeAsyncAwaitCompleter(type$.dynamic),
-        $async$returnValue, t1, id, $async$temp1, $async$temp2, $async$temp3;
+        $async$returnValue, nameWithoutForm, id, t1, $async$temp1;
       var $async$getPokedexNumber = A._wrapJsFunctionForAsync(function($async$errorCode, $async$result) {
         if ($async$errorCode === 1)
           return A._asyncRethrow($async$result, $async$completer);
@@ -4212,8 +4201,16 @@
             case 0:
               // Function start
               id = J.$index$asx(json, "id");
-              if (J.$lt$n(id, 1000)) {
+              t1 = J.getInterceptor$(id);
+              A.print(t1.toString$0(id));
+              if (t1.$lt(id, 1000)) {
                 $async$returnValue = id;
+                // goto return
+                $async$goto = 1;
+                break;
+              }
+              if ($name == null) {
+                $async$returnValue = -1;
                 // goto return
                 $async$goto = 1;
                 break;
@@ -4225,14 +4222,17 @@
                 $async$goto = 1;
                 break;
               }
-              $async$temp1 = J;
-              $async$temp2 = J;
-              $async$temp3 = J;
+              nameWithoutForm = t1[0];
+              $async$temp1 = A;
+              $async$goto = 4;
+              return A._asyncAwait(A.requestJson(B.JSString_methods.$add("https://pokeapi.co/api/v2/pokemon/", nameWithoutForm === "pumpkaboo" ? "pumpkaboo-average" : nameWithoutForm)), $async$getPokedexNumber);
+            case 4:
+              // returning from await.
               $async$goto = 3;
-              return A._asyncAwait(A.requestJson(B.JSString_methods.$add("https://pokeapi.co/api/v2/pokemon/", t1[0])), $async$getPokedexNumber);
+              return A._asyncAwait($async$temp1.getPokedexNumber($async$result, null), $async$getPokedexNumber);
             case 3:
               // returning from await.
-              $async$returnValue = $async$temp1.$index$asx($async$temp2.$index$asx($async$temp3.$index$asx($async$result, "forms"), 0), "name");
+              $async$returnValue = $async$result;
               // goto return
               $async$goto = 1;
               break;
@@ -4590,11 +4590,6 @@
             return receiver[a0];
       return J.getInterceptor$asx(receiver).$index(receiver, a0);
     },
-    $lt$n(receiver, a0) {
-      if (typeof receiver == "number" && typeof a0 == "number")
-        return receiver < a0;
-      return J.getInterceptor$n(receiver).$lt(receiver, a0);
-    },
     $mul$ns(receiver, a0) {
       if (typeof receiver == "number" && typeof a0 == "number")
         return receiver * a0;
@@ -4734,24 +4729,6 @@
         A.throwExpression(A.UnsupportedError$("add"));
       receiver.push(value);
     },
-    addAll$1(receiver, collection) {
-      A._arrayInstanceType(receiver)._eval$1("Iterable<1>")._as(collection);
-      if (!!receiver.fixed$length)
-        A.throwExpression(A.UnsupportedError$("addAll"));
-      this._addAllFromArray$1(receiver, collection);
-      return;
-    },
-    _addAllFromArray$1(receiver, array) {
-      var len, i;
-      type$.JSArray_dynamic._as(array);
-      len = array.length;
-      if (len === 0)
-        return;
-      if (receiver === array)
-        throw A.wrapException(A.ConcurrentModificationError$(receiver));
-      for (i = 0; i < len; ++i)
-        receiver.push(array[i]);
-    },
     elementAt$1(receiver, index) {
       if (!(index >= 0 && index < receiver.length))
         return A.ioore(receiver, index);
@@ -4813,13 +4790,6 @@
       if (index >= t1)
         throw A.wrapException(A.diagnoseIndexError(receiver, index));
       receiver[index] = value;
-    },
-    $add(receiver, other) {
-      var t1 = A._arrayInstanceType(receiver);
-      t1._eval$1("List<1>")._as(other);
-      t1 = A.List_List$of(receiver, true, t1._precomputed1);
-      this.addAll$1(t1, other);
-      return t1;
     },
     $isIterable: 1,
     $isList: 1
@@ -4888,9 +4858,6 @@
       factor = Math.pow(2, floorLog2);
       scaled = absolute < 1 ? absolute / factor : factor / absolute;
       return ((scaled * 9007199254740992 | 0) + (scaled * 3542243181176521 | 0)) * 599197 + floorLog2 * 1259 & 536870911;
-    },
-    $add(receiver, other) {
-      return receiver + other;
     },
     $sub(receiver, other) {
       return receiver - other;
@@ -6173,13 +6140,6 @@
     },
     elementAt$1(receiver, index) {
       return this.$index(receiver, index);
-    },
-    $add(receiver, other) {
-      var t1 = A.instanceType(receiver);
-      t1._eval$1("List<ListMixin.E>")._as(other);
-      t1 = A.List_List$of(receiver, true, t1._eval$1("ListMixin.E"));
-      B.JSArray_methods.addAll$1(t1, other);
-      return t1;
     },
     toString$0(receiver) {
       return A.IterableBase_iterableToFullString(receiver, "[", "]");
@@ -7519,7 +7479,7 @@
   };
   A.main_closure0.prototype = {
     call$1($event) {
-      A.printString(A.S(type$.legacy_KeyboardEvent._as($event).keyCode));
+      A.print(type$.legacy_KeyboardEvent._as($event).keyCode);
     },
     $signature: 28
   };
@@ -7578,26 +7538,25 @@
         list = t2.querySelector("#autocomplete-list"),
         t3 = J.getInterceptor$x($event);
       if (t3.get$keyCode($event) === 40) {
-        currentChoiceId = J.$add$ansx(currentChoiceId, 1);
+        if (typeof currentChoiceId !== "number")
+          return currentChoiceId.$add();
+        ++currentChoiceId;
         if (A.boolConversionCheck(list.hasChildNodes()))
           currentChoiceId = A.addActive(new A._ChildNodeListLazy(list), currentChoiceId);
       } else if (t3.get$keyCode($event) === 38) {
         if (typeof currentChoiceId !== "number")
           return currentChoiceId.$sub();
         --currentChoiceId;
-        if (A.boolConversionCheck(list.hasChildNodes())) {
-          currentChoiceId = new A._ChildNodeListLazy(list);
-          A.addActive(currentChoiceId, currentChoiceId);
-        }
+        if (A.boolConversionCheck(list.hasChildNodes()))
+          currentChoiceId = A.addActive(new A._ChildNodeListLazy(list), currentChoiceId);
       } else if (t3.get$keyCode($event) === 13) {
         $event.preventDefault();
         if (typeof currentChoiceId !== "number")
           return currentChoiceId.$gt();
         if (currentChoiceId > -1) {
           if (A.boolConversionCheck(list.hasChildNodes())) {
-            A._asIntS(currentChoiceId);
             t3 = list.childNodes;
-            if (!(currentChoiceId >= 0 && currentChoiceId < t3.length))
+            if (!(currentChoiceId < t3.length))
               return A.ioore(t3, currentChoiceId);
             t3 = t3[currentChoiceId];
             view = window;

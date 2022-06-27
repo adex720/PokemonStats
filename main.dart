@@ -183,7 +183,7 @@ onInputKey(event, currentChoiceId) {
     // arrow up
     currentChoiceId--;
     if (list.hasChildNodes()) {
-      addActive(currentChoiceId = list.nodes, currentChoiceId);
+      currentChoiceId = addActive(list.nodes, currentChoiceId);
     }
   } else if (event.keyCode == 13) {
     // enter
@@ -304,10 +304,14 @@ getPokedexNumber(json, String name) async {
   var id = json['id'];
   if (id < 1000) return id;
 
+  if (name == null) return -1;
+
   var nameWithoutForm = name.split('-')[0];
+  if (nameWithoutForm == 'pumpkaboo') nameWithoutForm = 'pumpkaboo-average';
+
   var url = 'https://pokeapi.co/api/v2/pokemon/' + nameWithoutForm;
   json = await requestJson(url);
-  return json['forms'][0]['name'];
+  return await getPokedexNumber(json, null);
 }
 
 switchName(name) {
@@ -317,11 +321,11 @@ switchName(name) {
   querySelector('#name').text = formattedName;
 }
 
-switchId(id){
+switchId(id) {
   querySelector('#number').text = id.toString();
 }
 
-updatePokemonColor(color){
+updatePokemonColor(color) {
   querySelector('#name').style.backgroundColor = color;
   querySelector('#number').style.backgroundColor = color;
 }
