@@ -3364,9 +3364,6 @@
     FormatException$(message, source) {
       return new A.FormatException(message, source);
     },
-    print(object) {
-      A.printString(A.S(object));
-    },
     Error: function Error() {
     },
     AssertionError: function AssertionError(t0) {
@@ -4125,17 +4122,8 @@
       t1.color = textColor;
     },
     getTypeTextColor(backgroundColor) {
-      var i = A.int_parse(J.substring$2$s(backgroundColor, 1, 7), 16),
-        red = B.JSInt_methods._shrOtherPositive$1(i, 16),
-        green = B.JSInt_methods._shrOtherPositive$1(i, 8) & 255,
-        blue = i & 255,
-        sum = red + green + blue;
-      A.print(backgroundColor);
-      A.print(red);
-      A.print(green);
-      A.print(blue);
-      A.print(sum);
-      if (sum > 383)
+      var i = A.int_parse(J.substring$2$s(backgroundColor, 1, 7), 16);
+      if (B.JSInt_methods._shrOtherPositive$1(i, 16) + (B.JSInt_methods._shrOtherPositive$1(i, 8) & 255) + (i & 255) > 383)
         return "#000000";
       return "#FFFFFF";
     },
@@ -7354,7 +7342,7 @@
   };
   A.main_closure0.prototype = {
     call$1($event) {
-      A.print(type$.legacy_KeyboardEvent._as($event).keyCode);
+      A.printString(A.S(type$.legacy_KeyboardEvent._as($event).keyCode));
     },
     $signature: 28
   };
@@ -7424,7 +7412,7 @@
   };
   A.autocomplete_closure.prototype = {
     call$1($event) {
-      var value, t3, a, t4, t5, t6, t7, t8, t9, unequalFound, i, t10, option, t11, b, _this = this,
+      var value, t3, elementList, valueLength, t4, t5, t6, t7, t8, unequalFound, i, t9, option, optionLength, optionStart, optionElement, _this = this,
         t1 = J.getInterceptor$x($event),
         t2 = t1.get$keyCode($event);
       if (typeof t2 !== "number")
@@ -7447,43 +7435,46 @@
       J._codeUnitAt$1$s(value, 0);
       _this._box_0.currentChoiceId = -1;
       t3 = document;
-      a = t3.createElement("div");
-      a.id = "autocomplete-list";
-      a.className = "autocomplete-items";
-      t2.parentNode.appendChild(a);
+      elementList = t3.createElement("div");
+      elementList.id = "autocomplete-list";
+      elementList.className = "autocomplete-items";
+      t2.parentNode.appendChild(elementList);
+      valueLength = value.length;
       t4 = _this.options;
       t5 = J.getInterceptor$asx(t4);
-      t6 = value.length;
-      t7 = type$._ElementEventStreamImpl_legacy_MouseEvent;
-      t8 = t7._eval$1("~(1)?");
-      t9 = type$.nullable_void_Function;
-      t7 = t7._precomputed1;
+      t6 = type$._ElementEventStreamImpl_legacy_MouseEvent;
+      t7 = t6._eval$1("~(1)?");
+      t8 = type$.nullable_void_Function;
+      t6 = t6._precomputed1;
       unequalFound = 0;
       i = 0;
       while (true) {
-        t10 = A._asNumS(t5.get$length(t4));
-        if (typeof t10 !== "number")
-          return A.iae(t10);
-        if (!(i < t10))
+        t9 = A._asNumS(t5.get$length(t4));
+        if (typeof t9 !== "number")
+          return A.iae(t9);
+        if (!(i < t9))
           break;
         option = t5.$index(t4, i);
-        t10 = J.getInterceptor$asx(option);
-        t11 = t10.get$length(option);
-        if (typeof t11 !== "number")
-          return t11.$ge();
-        if (t11 >= t6 && t10.substring$2(option, 0, t6).toUpperCase() === value.toUpperCase()) {
-          if (t10.get$length(option) !== t6)
-            ++unequalFound;
-          b = t3.createElement("div");
-          B.DivElement_methods.setInnerHtml$1(b, "<strong>" + t10.substring$2(option, 0, t6) + "</strong>");
-          B.DivElement_methods.setInnerHtml$1(b, J.$add$ansx(b.innerHTML, t10.substring$2(option, t6, t10.get$length(option))));
-          t10 = b.innerHTML;
-          A._asStringS(option);
-          B.DivElement_methods.setInnerHtml$1(b, J.$add$ansx(t10, "<input type='hidden' value='" + option + "'>"));
-          t10 = t8._as(new A.autocomplete__closure(t2, option, t1));
-          t9._as(null);
-          A._EventStreamSubscription$(b, "click", t10, false, t7);
-          a.appendChild(b);
+        t9 = J.getInterceptor$asx(option);
+        optionLength = t9.get$length(option);
+        if (typeof optionLength !== "number")
+          return optionLength.$ge();
+        if (optionLength >= valueLength) {
+          optionStart = t9.substring$2(option, 0, valueLength);
+          if (optionStart.toUpperCase() === value.toUpperCase()) {
+            if (optionLength !== valueLength)
+              ++unequalFound;
+            optionElement = t3.createElement("div");
+            B.DivElement_methods.setInnerHtml$1(optionElement, "<strong>" + optionStart + "</strong>");
+            B.DivElement_methods.setInnerHtml$1(optionElement, J.$add$ansx(optionElement.innerHTML, t9.substring$2(option, valueLength, optionLength)));
+            t9 = optionElement.innerHTML;
+            A._asStringS(option);
+            B.DivElement_methods.setInnerHtml$1(optionElement, J.$add$ansx(t9, "<input type='hidden' value='" + option + "'>"));
+            t9 = t7._as(new A.autocomplete__closure(t2, option, t1));
+            t8._as(null);
+            A._EventStreamSubscription$(optionElement, "click", t9, false, t6);
+            elementList.appendChild(optionElement);
+          }
         }
         ++i;
       }
@@ -7502,12 +7493,12 @@
     $signature: 6
   };
   A.autocomplete_closure0.prototype = {
-    call$1(e) {
-      var t3, target, view, $event, _this = this,
+    call$1($event) {
+      var t3, view, _this = this,
         t1 = document,
         list = t1.querySelector("#autocomplete-list"),
-        t2 = J.getInterceptor$x(e);
-      if (t2.get$keyCode(e) === 40) {
+        t2 = J.getInterceptor$x($event);
+      if (t2.get$keyCode($event) === 40) {
         t1 = _this._box_0;
         t2 = t1.currentChoiceId;
         if (typeof t2 !== "number")
@@ -7515,7 +7506,7 @@
         t1.currentChoiceId = t2 + 1;
         if (A.boolConversionCheck(list.hasChildNodes()))
           _this.addActive.call$1(new A._ChildNodeListLazy(list));
-      } else if (t2.get$keyCode(e) === 38) {
+      } else if (t2.get$keyCode($event) === 38) {
         t1 = _this._box_0;
         t2 = t1.currentChoiceId;
         if (typeof t2 !== "number")
@@ -7523,8 +7514,8 @@
         t1.currentChoiceId = t2 - 1;
         if (A.boolConversionCheck(list.hasChildNodes()))
           _this.addActive.call$1(new A._ChildNodeListLazy(list));
-      } else if (t2.get$keyCode(e) === 13) {
-        e.preventDefault();
+      } else if (t2.get$keyCode($event) === 13) {
+        $event.preventDefault();
         t2 = _this._box_0;
         t3 = t2.currentChoiceId;
         if (typeof t3 !== "number")
@@ -7532,12 +7523,12 @@
         if (t3 > -1) {
           if (A.boolConversionCheck(list.hasChildNodes())) {
             t2 = t2.currentChoiceId;
-            target = B.NodeList_methods.$index(list.childNodes, t2);
+            t2 = B.NodeList_methods.$index(list.childNodes, t2);
             view = window;
             $event = type$.MouseEvent._as(t1.createEvent("MouseEvent"));
             $event.toString;
-            J._initMouseEvent_1$15$x($event, "click", true, true, view, 0, 0, 0, 0, 0, false, false, false, false, 0, A._convertDartToNative_EventTarget(target));
-            target.dispatchEvent($event);
+            J._initMouseEvent_1$15$x($event, "click", true, true, view, 0, 0, 0, 0, 0, false, false, false, false, 0, A._convertDartToNative_EventTarget(t2));
+            t2.dispatchEvent($event);
           }
         } else
           A.loadCurrentPokemon();

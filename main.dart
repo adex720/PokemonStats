@@ -107,62 +107,55 @@ autocomplete(input, options) {
 
     currentChoiceId = -1;
 
-    var a = Element.div();
-    a.id = "autocomplete-list";
-    a.className = "autocomplete-items";
-    input.parentNode.nodes.add(a);
+    var elementList = Element.div();
+    elementList.id = "autocomplete-list";
+    elementList.className = "autocomplete-items";
+    input.parentNode.nodes.add(elementList);
 
+    var valueLength = value.length; // amount of letters typed on input element
     var unequalFound = 0;
     for (var i = 0; i < options.length; i++) {
       var option = options[i];
-      if (option.length >= value.length &&
-          option.substring(0, value.length).toUpperCase() ==
-              value.toUpperCase()) {
-        if (option.length != value.length) unequalFound++;
+      var optionLength = option.length; // amount of letters on current option
+      if (optionLength >= valueLength) {
+        var optionStart = option.substring(0,
+            valueLength); // start of current option, containing same amount of letters as currently typed on input element
+        if (optionStart.toUpperCase() == value.toUpperCase()) {
+          if (optionLength != valueLength) unequalFound++;
 
-        var b = Element.div();
-
-        b.innerHtml =
-            "<strong>" + option.substring(0, value.length) + "</strong>";
-        b.innerHtml += option.substring(value.length, option.length);
-        b.innerHtml += "<input type='hidden' value='" + option + "'>";
-        b.onClick.listen((e) {
-          input.value = option;
-          closeAllLists();
-          loadCurrentPokemon();
-        });
-        a.nodes.add(b);
+          var optionElement = Element.div();
+          optionElement.innerHtml = "<strong>" + optionStart + "</strong>";
+          optionElement.innerHtml +=
+              option.substring(valueLength, optionLength);
+          optionElement.innerHtml +=
+              "<input type='hidden' value='" + option + "'>";
+          optionElement.onClick.listen((e) {
+            input.value = option;
+            closeAllLists();
+            loadCurrentPokemon();
+          });
+          elementList.nodes.add(optionElement);
+        }
       }
     }
 
     if (unequalFound == 0) closeAllLists();
   });
 
-  input.onKeyDown.listen((e) {
+  input.onKeyDown.listen((event) {
     var list = querySelector('#autocomplete-list');
 
-    if (e.keyCode == 40) {
+    if (event.keyCode == 40) {
       currentChoiceId++;
       if (list.hasChildNodes()) addActive(list.nodes);
-    } else if (e.keyCode == 38) {
+    } else if (event.keyCode == 38) {
       currentChoiceId--;
       if (list.hasChildNodes()) addActive(list.nodes);
-    } else if (e.keyCode == 13) {
-      e.preventDefault();
+    } else if (event.keyCode == 13) {
+      event.preventDefault();
       if (currentChoiceId > -1) {
         if (list.hasChildNodes()) {
-          var target = list.nodes[currentChoiceId];
-          MouseEvent event = new MouseEvent('click',
-              detail: 0,
-              screenX: 0,
-              screenY: 0,
-              clientX: 0,
-              clientY: 0,
-              button: 0,
-              canBubble: true,
-              cancelable: true,
-              relatedTarget: target);
-          target.dispatchEvent(event);
+          runClick(list.nodes[currentChoiceId]);
         }
       } else
         loadCurrentPokemon();
@@ -172,6 +165,11 @@ autocomplete(input, options) {
   document.onClick.listen((e) {
     closeAllListsForElement(e.target);
   });
+}
+
+runClick(target) {
+  MouseEvent clickEvent = new MouseEvent('click', relatedTarget: target);
+  target.dispatchEvent(clickEvent);
 }
 
 loadPokemonNames() async {
@@ -356,6 +354,5 @@ setStats(stats) {
 }
 
 //TODO: display pokedex number
-//TODO: display pokemon type(s)
 //TODO: check for valid pokemon name or number
 //TODO: use pokemon color for name background
