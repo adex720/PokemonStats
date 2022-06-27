@@ -7307,7 +7307,7 @@
   };
   A.autocomplete_closure.prototype = {
     call$1($event) {
-      var value, t3, a, t4, t5, t6, t7, t8, t9, i, t10, option, t11, b, _this = this,
+      var value, t3, a, t4, t5, t6, t7, t8, t9, unequalFound, i, t10, option, t11, b, _this = this,
         t1 = J.getInterceptor$x($event),
         t2 = t1.get$keyCode($event);
       if (typeof t2 !== "number")
@@ -7341,6 +7341,7 @@
       t8 = t7._eval$1("~(1)?");
       t9 = type$.nullable_void_Function;
       t7 = t7._precomputed1;
+      unequalFound = 0;
       i = 0;
       while (true) {
         t10 = A._asNumS(t5.get$length(t4));
@@ -7354,6 +7355,8 @@
         if (typeof t11 !== "number")
           return t11.$ge();
         if (t11 >= t6 && t10.substring$2(option, 0, t6).toUpperCase() === value.toUpperCase()) {
+          if (t10.get$length(option) !== t6)
+            ++unequalFound;
           b = t3.createElement("div");
           B.DivElement_methods.setInnerHtml$1(b, "<strong>" + t10.substring$2(option, 0, t6) + "</strong>");
           B.DivElement_methods.setInnerHtml$1(b, J.$add$ansx(b.innerHTML, t10.substring$2(option, t6, t10.get$length(option))));
@@ -7367,6 +7370,8 @@
         }
         ++i;
       }
+      if (unequalFound === 0)
+        t1.call$0();
     },
     $signature: 29
   };

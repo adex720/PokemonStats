@@ -109,11 +109,14 @@ autocomplete(input, options) {
     a.className = "autocomplete-items";
     input.parentNode.nodes.add(a);
 
+    var unequalFound = 0;
     for (var i = 0; i < options.length; i++) {
       var option = options[i];
       if (option.length >= value.length &&
           option.substring(0, value.length).toUpperCase() ==
               value.toUpperCase()) {
+        if (option.length != value.length) unequalFound++;
+
         var b = Element.div();
 
         b.innerHtml =
@@ -128,6 +131,8 @@ autocomplete(input, options) {
         a.nodes.add(b);
       }
     }
+
+    if (unequalFound == 0) closeAllLists();
   });
 
   input.onKeyDown.listen((e) {
