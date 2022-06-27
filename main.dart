@@ -422,5 +422,4 @@ setStats(stats) {
   querySelector('#cp-value').text = cp.toString();
 }
 
-//TODO: check for valid pokemon name or number
 //TODO: use pokemon color for name background
