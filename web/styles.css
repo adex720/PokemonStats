@@ -1,0 +1,78 @@
+body {
+
+}
+
+#search {
+    margin: 1rem;
+}
+
+.autocomplete {
+  position: relative;
+  display: inline-block;
+}
+
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
+}
+.autocomplete-items div:hover {
+  background-color: #e9e9e9;
+}
+.autocomplete-active {
+  background-color: DodgerBlue !important;
+  color: #ffffff;
+}
+
+#stats {
+    display: flex;
+    flex-direction: row;
+}
+
+.value {
+    border-radius: 15px;
+    padding: 0rem 1rem;
+    margin: 1rem;
+    white-space: nowrap;
+    display: flex;
+    gap: 0.2rem;
+}
+
+#attack {
+    background-color: pink;
+}
+
+#defence {
+    background-color: lightgreen;
+}
+
+#stamina {
+    background-color: lightblue;
+}
+
+.box {
+    display: flex;
+    flex-direction: row;
+}
+
+#cp {
+    background-color: lightyellow;
+}
+
+#name {
+    border-radius: 15px;
+    padding: 0rem 1rem;
+    margin: 1rem;
+    background-color: lightyellow;
+}

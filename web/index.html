@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <title>Pokemon arvioija</title>
+    <script src='app.js' defer></script>
+    <link rel='stylesheet' href='styles.css'>
+</head>
+<div id="search">
+    <div class="autocomplete">
+        <input id="search-field" type="text" name="pokemon-name" placeholder="Pokemon">
+    </div>
+    <button id="search-button">Hae</button>
+</div>
+<div id="results">
+    <div id="info" class="box">
+        <h1 id="name">Nimi</h1>
+    </div>
+    <div id="stats">
+        <div id="attack" class="value">
+            <p id="attack-text">Attack:</p>
+            <p id="attack-value">100</p>
+        </div>
+        <div id="defence" class="value">
+            <p id="defence-text">Defence:</p>
+            <p id="defence-value">100</p>
+        </div>
+        <div id="stamina" class="value">
+            <p id="stamina-text">Hp:</p>
+            <p id="stamina-value">100</p>
+        </div>
+    </div>
+
+    <div id="overview" class="box">
+        <div id="cp" class="value">
+            <p id="cp-text">Cp tasolla 40:</p>
+            <p id="cp-value">3000</p>
+        </div>
+    </div>
+</div>
+</html>
